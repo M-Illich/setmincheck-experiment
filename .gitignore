@@ -31,3 +31,7 @@ hs_err_pid*
 # Maven
 log/
 target/
+
+# large files
+rndmCols-1x20000.txt
+rndmCols-10x10000.txt
