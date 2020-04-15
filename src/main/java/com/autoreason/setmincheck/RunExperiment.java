@@ -2,12 +2,9 @@ package com.autoreason.setmincheck;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.NavigableSet;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
-import javax.swing.text.html.HTMLDocument.Iterator;
 
 import com.autoreason.setmincheck.setobjects.BitVectorSet;
 import com.autoreason.setmincheck.setobjects.BitVectorSet2;
@@ -28,7 +25,7 @@ public class RunExperiment {
 		DataProvider dataProvider = new DataProvider(file);
 
 		// perform experiment
-		ArrayList<Long> measuredTimes = getTimeForMinCheck(setRepList, dataProvider, 100);
+		ArrayList<Long> measuredTimes = getTimeForMinCheck(setRepList, dataProvider, 20);
 
 		// TEST TODO
 		for (Long t : measuredTimes) {
@@ -84,7 +81,7 @@ public class RunExperiment {
 			// repeat process for more accurate time measurement
 			for (int j = 0; j < repeat; j++) {
 				// perform minimality check on collection
-				MinimalityCheckerTest.isMinimalSimple(col, dataProvider.testSet);
+				simpleMinimalityCheck(col, dataProvider.testSet);
 			}
 		}
 		// end time measuring
@@ -92,7 +89,7 @@ public class RunExperiment {
 		// save measurement for current set representation
 		measuredTimes.add((end - start) / repeat);
 
-		
+//		
 //		// convert the collections into UBTree objects
 //		ArrayList<UBTree<Integer>> ubTreeList = new ArrayList<UBTree<Integer>>();
 //		for (Collection<Set<Integer>> col : dataProvider.fileCollections) {
@@ -112,8 +109,8 @@ public class RunExperiment {
 //		end = System.nanoTime();
 //		// save measurement for current set representation
 //		measuredTimes.add((end - start) / repeat);
-		
 
+		
 		// convert the collections into the different provided set representations
 		ArrayList<ArrayList<NavigableSet<C>>> setRepConvertList = dataProvider.getConvertedCollections(setRepList);
 		// conduct minimality check for each set representation
@@ -138,6 +135,27 @@ public class RunExperiment {
 
 		return measuredTimes;
 
+	}
+
+	/**
+	 * Simple set minimality check by considering every set of a collection to find
+	 * all the subsets
+	 * 
+	 * @param col     A {@link Collection} of {@link Set} elements
+	 * @param testSet A {@link Set}
+	 * @return {@code true} if the collection {@code col} does not contain any
+	 *         subset of {@code testSet}, otherwise {@code false}
+	 */
+	private static boolean simpleMinimalityCheck(Collection<Set<Integer>> col, Set testSet) {
+		Collection<Set<Integer>> subsets = new HashSet<Set<Integer>>();
+		// get all subsets from collection
+		for (Set<Integer> set : col) {
+			if (testSet.containsAll(set)) {
+				subsets.add(set);
+			}
+		}
+		// testSet is minimal w.r.t. col if no subset could be found
+		return subsets.isEmpty();
 	}
 
 }
