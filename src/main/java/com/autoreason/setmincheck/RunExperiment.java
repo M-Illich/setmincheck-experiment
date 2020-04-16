@@ -8,24 +8,26 @@ import java.util.Set;
 
 import com.autoreason.setmincheck.setobjects.BitVectorSet;
 import com.autoreason.setmincheck.setobjects.BitVectorSet2;
+import com.autoreason.setmincheck.setobjects.BoolVectorSet;
 import com.autoreason.setmincheck.setobjects.SetRepresent;
 
 public class RunExperiment {
 
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
 
-		// path to test data file
+		// path to test data file			 jsSets-galen.txt
 		String file = "src\\main\\resources\\rndmCols-10x10000.txt";
 		// list of objects realizing different set representations
 		ArrayList<C> setRepList = new ArrayList<C>();
 		setRepList.add((C) new BitVectorSet());
 		setRepList.add((C) new BitVectorSet2());
+		setRepList.add((C) new BoolVectorSet());
 
 		// create DataProvider for data given in test file
 		DataProvider dataProvider = new DataProvider(file);
 
 		// perform experiment
-		ArrayList<Long> measuredTimes = getTimeForMinCheck(setRepList, dataProvider, 20);
+		ArrayList<Long> measuredTimes = getTimeForMinCheck(setRepList, dataProvider, 100);
 
 		// TEST TODO
 		for (Long t : measuredTimes) {
@@ -116,7 +118,7 @@ public class RunExperiment {
 		// conduct minimality check for each set representation
 		for (int i = 0; i < setRepNr; i++) {
 			// get MinimalityChecker instance for current SetRepresent implementation
-			MinimalityChecker<?, Set<?>> minChecker = setRepList.get(i).getMinChecker();
+			MinimalityChecker<?> minChecker = setRepList.get(i).getMinChecker();
 			// start time measuring
 			start = System.nanoTime();
 			// check minimality for each collection
