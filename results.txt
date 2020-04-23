@@ -1,0 +1,48 @@
+jsSets-galen
+Simple: 141908
+BitVectorSet: 248223
+BitVectorSet2: 239710
+BoolVectorSet: 166189
+BoolVectorSet2: 225681
+UBTree: 0
+
+jsSets-go-big
+Simple: 14367701
+BitVectorSet: 9032165
+BitVectorSet2: 9103830
+BoolVectorSet: 14743831
+BoolVectorSet2: 9116941
+UBTree: 0
+
+jsSets-go
+Simple: 1192544
+BitVectorSet: 719976
+BitVectorSet2: 737543
+BoolVectorSet: 292217
+BoolVectorSet2: 579234
+UBTree: 0
+
+rndmCols-10x10000
+Simple: 25008019
+BitVectorSet: 13712963
+BitVectorSet2: 13226737
+BoolVectorSet: 38648799
+BoolVectorSet2: 20642417
+UBTree: 0
+
+rndmCols-1x1000
+Simple: 206736
+BitVectorSet: 1303164
+BitVectorSet2: 1301182
+BoolVectorSet: 15469884
+BoolVectorSet2: 2007114
+UBTree: 0
+
+rndmCols-1x20000
+Simple: 3063502
+BitVectorSet: 2671282
+BitVectorSet2: 2666955
+BoolVectorSet: 4586696
+BoolVectorSet2: 4646984
+UBTree: 0
+

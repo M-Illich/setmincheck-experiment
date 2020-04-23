@@ -183,7 +183,7 @@ public class UBTree<C extends Comparable<C>> {
 	}
 
 	/**
-	 * Find all the {@link UBTreeNode} objects in a sorted set that relate to the
+	 * Find all the {@link UBTreeNode} objects in a collection that relate to the
 	 * given element {@code e}
 	 * 
 	 * @param treeNodes A {@link Collection} of {@link UBTreeNode} objects
