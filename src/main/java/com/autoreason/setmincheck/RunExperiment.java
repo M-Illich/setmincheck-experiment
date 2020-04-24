@@ -20,9 +20,9 @@ import com.autoreason.setmincheck.setobjects.SetRepresent;
 public class RunExperiment {
 
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
-
+		
 		final String RESOURCE_FOLDER = "src\\main\\resources";
-		final String RESULT_FILE = "results.txt";
+		final String RESULT_FILE = "results.csv";
 
 		// list of objects realizing different set representations
 		ArrayList<C> setRepList = new ArrayList<C>();
@@ -46,6 +46,17 @@ public class RunExperiment {
 		try {
 			// prepare file for results
 			FileWriter writer = new FileWriter(RESULT_FILE);
+			// create writer
+			writer = new FileWriter(RESULT_FILE, true);
+			buffWriter = new BufferedWriter(writer);
+			
+			// write used classes to file as names for columns
+			String line = "test-file";				
+			for (int i = 0; i < testedClasses.length; i++) {
+				line = line + "," + testedClasses[i];					
+			}			
+			buffWriter.write(line);
+			buffWriter.newLine();		
 
 			// list all test files
 			File resources = new File(RESOURCE_FOLDER);
@@ -56,29 +67,22 @@ public class RunExperiment {
 				dataProvider = new DataProvider(file.getPath());
 
 				// perform experiment
-				measuredTimes = getTimeForMinCheck(setRepList, dataProvider, 1000);
-
-				// write results to file
-
-				// create writer
-				writer = new FileWriter(RESULT_FILE, true);
-				buffWriter = new BufferedWriter(writer);
-
+				measuredTimes = getTimeForMinCheck(setRepList, dataProvider, 200);
+				
 				// get name of current test file
 				String fileName = file.getName();
-				buffWriter.write(fileName.substring(0, fileName.indexOf(".")));
-				buffWriter.newLine();
-				// write measured times along with the name of the executed class to the result
-				// file
+				// create String containing file name and results
+				line = fileName.substring(0, fileName.indexOf("."));				
 				for (int i = 0; i < measuredTimes.length; i++) {
-					buffWriter.write(testedClasses[i] + ": " + measuredTimes[i]);
-					buffWriter.newLine();
+					line = line + "," + measuredTimes[i];					
 				}
-
-				buffWriter.newLine();
-				buffWriter.close();
-
+				// write results to file
+				buffWriter.write(line);
+				buffWriter.newLine();				
 			}
+			
+			buffWriter.close();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -158,7 +162,7 @@ public class RunExperiment {
 				// save measurement for current set representation
 				measuredTimes[i + 1] += end - start;
 			}
-			
+
 //	TODO
 //			// convert the collections into UBTree objects
 //			ArrayList<UBTree<Integer>> ubTreeList = new ArrayList<UBTree<Integer>>();
