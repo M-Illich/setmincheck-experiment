@@ -1,9 +1,14 @@
 package com.autoreason.setmincheck;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,9 +26,10 @@ public class RunExperiment {
 
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
 		
-		final String RESOURCE_FOLDER = "src\\main\\resources";
+		final String RESOURCE_FOLDER = "src\\main\\resources\\";
 		final String RESULT_FILE = "results.csv";
-
+		final int REPETITIONS = 38;
+		
 		// list of objects realizing different set representations
 		ArrayList<C> setRepList = new ArrayList<C>();
 		setRepList.add((C) new BitVectorSet());
@@ -56,21 +62,34 @@ public class RunExperiment {
 				line = line + "," + testedClasses[i];					
 			}			
 			buffWriter.write(line);
-			buffWriter.newLine();		
-
-			// list all test files
-			File resources = new File(RESOURCE_FOLDER);
+			buffWriter.newLine();				
+			
+			// list all test files			
+			BufferedReader nameReader = new BufferedReader(new FileReader(RESOURCE_FOLDER + "fileNames.txt"));					
+			String[] fileNames = nameReader.lines().toArray(String[]::new);
 			// conduct performance measurement for each test file
-			for (File file : resources.listFiles()) {
-
+			for (String fileName : fileNames) {				
 				// create DataProvider for data given in test file
-				dataProvider = new DataProvider(file.getPath());
-
-				// perform experiment
-				measuredTimes = getTimeForMinCheck(setRepList, dataProvider, 200);
+				dataProvider = new DataProvider(RESOURCE_FOLDER + "files\\" + fileName);
 				
-				// get name of current test file
-				String fileName = file.getName();
+				// initialize arrays for measured times
+				measuredTimes = new long[testedClasses.length];
+				long[] currentTimes = new long[measuredTimes.length];
+				// repeat computation with different test sets
+				for (int i = 0; i < REPETITIONS; i++) {
+					// perform experiment
+					currentTimes = getTimeForMinCheck(setRepList, dataProvider, 5);	
+					// update times
+					for (int j = 0; j < currentTimes.length; j++) {
+						measuredTimes[j] += currentTimes[j];
+					}
+					// get new test set
+					dataProvider.getNewTestSet();
+				}
+				// compute average of measured times
+				for (int j = 0; j < measuredTimes.length; j++) {
+					measuredTimes[j] /= REPETITIONS;
+				}
 				// create String containing file name and results
 				line = fileName.substring(0, fileName.indexOf("."));				
 				for (int i = 0; i < measuredTimes.length; i++) {
@@ -80,7 +99,7 @@ public class RunExperiment {
 				buffWriter.write(line);
 				buffWriter.newLine();				
 			}
-			
+			nameReader.close();
 			buffWriter.close();
 
 		} catch (IOException e) {

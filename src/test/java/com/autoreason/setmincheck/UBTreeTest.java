@@ -105,34 +105,34 @@ public class UBTreeTest {
 		set.add(5);
 		set.add(6);
 		TreeSet<Integer> sub1 = new TreeSet<Integer>();
-		sub1.add(0);
-		sub1.add(1);
-		sub1.add(2);
-		sub1.add(3);
-		sub1.add(4);
+//		sub1.add(0);
+//		sub1.add(1);
+//		sub1.add(2);
+//		sub1.add(3);
+//		sub1.add(4);
 		sub1.add(5);
 		TreeSet<Integer> sub2 = new TreeSet<Integer>();
-		sub2.add(0);
-		sub2.add(1);
-		sub2.add(2);		
+//		sub2.add(0);
+//		sub2.add(1);
+//		sub2.add(2);		
 		sub2.add(6);
 		TreeSet<Integer> sub3 = new TreeSet<Integer>();		
-		sub3.add(3);
-		sub3.add(4);
+//		sub3.add(3);
+//		sub3.add(4);
 		sub3.add(5);
 		
 		Collection<SortedSet<Integer>> subsets = new UBTree<Integer>().lookup_subs(nodes, set);
 		
-		for (SortedSet<Integer> sub : subsets) {
-			for (Integer i : sub) {
-				System.out.print(i + " ");
-			}
-			System.out.println();
-		}
+//		for (SortedSet<Integer> sub : subsets) {
+//			for (Integer i : sub) {
+//				System.out.print(i + " ");
+//			}
+//			System.out.println();
+//		}
 		
-//		assertTrue(subsets.contains(sub1));
-//		assertTrue(subsets.contains(sub2));
-//		assertTrue(subsets.contains(sub3));
+		assertTrue(subsets.contains(sub1));
+		assertTrue(subsets.contains(sub2));
+		assertTrue(subsets.contains(sub3));
 		
 	}
 
