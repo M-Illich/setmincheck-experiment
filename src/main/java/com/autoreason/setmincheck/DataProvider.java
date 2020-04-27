@@ -184,11 +184,11 @@ public class DataProvider {
 
 	public static void main(String[] args) {
 		int numCols = 1;
-		int numSets = 50000;
-		int maxSize = 2048;
-		int range = 155000;
-		long seed = 34785626;
-		String file = RESOURCE_FOLDER + "rndmCols-" + numCols + "x" + numSets + "x" + maxSize + ".txt";
+		int numSets = 200;
+		int maxSize = 200000;
+		int range = 600000;
+		long seed = 782346;
+		String file = RESOURCE_FOLDER + "files\\rndmCols-" + numCols + "x" + numSets + "x" + maxSize + ".txt";
 
 		// generate files with test data
 		createRandomSetsFile(file, numCols, numSets, maxSize, range, seed);

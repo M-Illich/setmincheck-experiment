@@ -26,10 +26,10 @@ public class RunExperiment {
 
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
 		
-		final String RESOURCE_FOLDER = "src\\main\\resources\\";
+//		final String RESOURCE_FOLDER = "src\\main\\resources\\";
 		final String RESULT_FILE = "results.csv";
-		final int REPETITIONS = 38;
-		
+		final int REPETITIONS = 3;
+			
 		// list of objects realizing different set representations
 		ArrayList<C> setRepList = new ArrayList<C>();
 		setRepList.add((C) new BitVectorSet());
@@ -65,18 +65,25 @@ public class RunExperiment {
 			buffWriter.newLine();				
 			
 			// list all test files			
-			BufferedReader nameReader = new BufferedReader(new FileReader(RESOURCE_FOLDER + "fileNames.txt"));					
+//			BufferedReader nameReader = new BufferedReader(new FileReader(RESOURCE_FOLDER + "fileNames.txt"));
+			BufferedReader nameReader = new BufferedReader(new InputStreamReader(RunExperiment.class.getResourceAsStream("/fileNames.txt")));
+			
 			String[] fileNames = nameReader.lines().toArray(String[]::new);
 			// conduct performance measurement for each test file
-			for (String fileName : fileNames) {				
-				// create DataProvider for data given in test file
-				dataProvider = new DataProvider(RESOURCE_FOLDER + "files\\" + fileName);
+			for (int i = 0; i < fileNames.length; i++) {			
+				String fileName = fileNames[i];
+				// show current experiment progress
+				System.out.println("running: " + (i+1) + "/" + fileNames.length);
 				
+				// create DataProvider for data given in test file
+//				dataProvider = new DataProvider(RESOURCE_FOLDER + "files\\" + fileName);
+				dataProvider = new DataProvider("/files/" + fileName);
+								
 				// initialize arrays for measured times
 				measuredTimes = new long[testedClasses.length];
 				long[] currentTimes = new long[measuredTimes.length];
 				// repeat computation with different test sets
-				for (int i = 0; i < REPETITIONS; i++) {
+				for (int k = 0; k < REPETITIONS; k++) {
 					// perform experiment
 					currentTimes = getTimeForMinCheck(setRepList, dataProvider, 5);	
 					// update times
@@ -92,8 +99,8 @@ public class RunExperiment {
 				}
 				// create String containing file name and results
 				line = fileName.substring(0, fileName.indexOf("."));				
-				for (int i = 0; i < measuredTimes.length; i++) {
-					line = line + "," + measuredTimes[i];					
+				for (int k = 0; k < measuredTimes.length; k++) {
+					line = line + "," + measuredTimes[k];					
 				}
 				// write results to file
 				buffWriter.write(line);
@@ -101,6 +108,9 @@ public class RunExperiment {
 			}
 			nameReader.close();
 			buffWriter.close();
+			
+			// experiment finished
+			System.out.println("done");
 
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -35,3 +35,7 @@ target/
 # large files
 rndmCols-1x20000.txt
 rndmCols-10x10000.txt
+rndmCols-1x150x500000.txt
+rndmCols-1x200x200000.txt
+rndmCols-1x200x100000.txt
+rndmCols-1x100000x128.txt
