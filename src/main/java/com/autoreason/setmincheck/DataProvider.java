@@ -184,10 +184,10 @@ public class DataProvider {
 
 	public static void main(String[] args) {
 		int numCols = 1;
-		int numSets = 200;
-		int maxSize = 200000;
-		int range = 600000;
-		long seed = 782346;
+		int numSets = 3000;
+		int maxSize = 1000;
+		int range = 3000;
+		long seed = 201;
 		String file = RESOURCE_FOLDER + "files\\rndmCols-" + numCols + "x" + numSets + "x" + maxSize + ".txt";
 
 		// generate files with test data

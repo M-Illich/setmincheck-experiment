@@ -26,9 +26,8 @@ public class RunExperiment {
 
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
 		
-//		final String RESOURCE_FOLDER = "src\\main\\resources\\";
 		final String RESULT_FILE = "results.csv";
-		final int REPETITIONS = 3;
+		final int REPETITIONS = 20;
 			
 		// list of objects realizing different set representations
 		ArrayList<C> setRepList = new ArrayList<C>();
@@ -65,9 +64,7 @@ public class RunExperiment {
 			buffWriter.newLine();				
 			
 			// list all test files			
-//			BufferedReader nameReader = new BufferedReader(new FileReader(RESOURCE_FOLDER + "fileNames.txt"));
-			BufferedReader nameReader = new BufferedReader(new InputStreamReader(RunExperiment.class.getResourceAsStream("/fileNames.txt")));
-			
+			BufferedReader nameReader = new BufferedReader(new InputStreamReader(RunExperiment.class.getResourceAsStream("/fileNames.txt")));			
 			String[] fileNames = nameReader.lines().toArray(String[]::new);
 			// conduct performance measurement for each test file
 			for (int i = 0; i < fileNames.length; i++) {			
@@ -76,16 +73,15 @@ public class RunExperiment {
 				System.out.println("running: " + (i+1) + "/" + fileNames.length);
 				
 				// create DataProvider for data given in test file
-//				dataProvider = new DataProvider(RESOURCE_FOLDER + "files\\" + fileName);
 				dataProvider = new DataProvider("/files/" + fileName);
-								
+												
 				// initialize arrays for measured times
 				measuredTimes = new long[testedClasses.length];
 				long[] currentTimes = new long[measuredTimes.length];
 				// repeat computation with different test sets
 				for (int k = 0; k < REPETITIONS; k++) {
 					// perform experiment
-					currentTimes = getTimeForMinCheck(setRepList, dataProvider, 5);	
+					currentTimes = getTimeForMinCheck(setRepList, dataProvider, 20);	
 					// update times
 					for (int j = 0; j < currentTimes.length; j++) {
 						measuredTimes[j] += currentTimes[j];
@@ -115,18 +111,6 @@ public class RunExperiment {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-//		// TEST TODO
-//		for (ArrayList<Collection<C>> arrayList : setRepConvertList) {
-//			for (Collection<C> col : arrayList) {
-//				for (C c : col) {
-//					BitVectorSet bvs = (BitVectorSet) c;
-//					System.out.print(bvs.setRepresentation[0] + " ");
-//				}
-//				System.out.println();
-//			}
-//		}
-
 	}
 
 	/**
