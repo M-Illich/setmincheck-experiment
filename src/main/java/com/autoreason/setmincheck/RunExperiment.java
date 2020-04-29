@@ -16,6 +16,8 @@ import java.util.HashSet;
 import java.util.NavigableSet;
 import java.util.Set;
 
+import com.autoreason.setfileconverter.FileSetConverter;
+import com.autoreason.setmincheck.datagenerator.SetGenerator;
 import com.autoreason.setmincheck.setobjects.BitVectorSet;
 import com.autoreason.setmincheck.setobjects.BitVectorSet2;
 import com.autoreason.setmincheck.setobjects.BoolVectorSet;
@@ -25,7 +27,7 @@ import com.autoreason.setmincheck.setobjects.SetRepresent;
 public class RunExperiment {
 
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
-		
+						
 		final String RESULT_FILE = "results.csv";
 		final int REPETITIONS = 20;
 			
@@ -177,22 +179,22 @@ public class RunExperiment {
 			}
 
 //	TODO
-//			// convert the collections into UBTree objects
-//			ArrayList<UBTree<Integer>> ubTreeList = new ArrayList<UBTree<Integer>>();
-//			for (Collection<Set<Integer>> col : dataProvider.fileCollections) {
-//				ubTreeList.add(new UBTree<Integer>(col));
-//			}
-//			// start time measuring
-//			start = System.nanoTime();
-//			// check minimality for each UBTree
-//			for (UBTree<Integer> tree : ubTreeList) {
-//				// perform minimality check
-//				tree.checkMinimal(dataProvider.testSet);
-//			}
-//			// end time measuring
-//			end = System.nanoTime();
-//			// save measurement for current set representation
-//			measuredTimes[measuredTimes.length - 1] += end - start;
+			// convert the collections into UBTree objects
+			ArrayList<UBTree<Integer>> ubTreeList = new ArrayList<UBTree<Integer>>();
+			for (Collection<Set<Integer>> col : dataProvider.fileCollections) {
+				ubTreeList.add(new UBTree<Integer>(col));
+			}
+			// start time measuring
+			start = System.nanoTime();
+			// check minimality for each UBTree
+			for (UBTree<Integer> tree : ubTreeList) {
+				// perform minimality check
+				tree.checkMinimal(dataProvider.testSet);
+			}
+			// end time measuring
+			end = System.nanoTime();
+			// save measurement for current set representation
+			measuredTimes[measuredTimes.length - 1] += end - start;
 
 		}
 		// compute average

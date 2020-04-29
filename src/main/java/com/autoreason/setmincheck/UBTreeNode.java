@@ -79,8 +79,8 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 		}
 		return distanceToNextEOP;
 	}
-	
-	public int getDistanceToNextEOP(){
+
+	public int getDistanceToNextEOP() {
 		return this.distanceToNextEOP;
 	}
 
@@ -89,10 +89,11 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 		// use element for comparison (since method is used to sort members of an UBTree
 		// where different ones always possess different elements)
 		int c = this.element.compareTo(other.element);
-		// use distance to next end-of-path marker for equal elements
-		if (c == 0) {
-			c = Integer.compare(this.distanceToNextEOP, other.distanceToNextEOP);
-		}
+		// use distance to next end-of-path marker for equal elements 
+		// TODO (?) only needed for subset search where it is explicitly applied by the defined Comparator
+//		if (c == 0) {				
+//			c = Integer.compare(this.distanceToNextEOP, other.distanceToNextEOP);
+//		}
 		return c;
 	}
 

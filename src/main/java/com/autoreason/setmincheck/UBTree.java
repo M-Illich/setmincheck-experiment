@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -52,7 +53,8 @@ public class UBTree<C extends Comparable<C>> {
 	 */
 	public void insert(SortedSet<C> set) {
 		// initialize currently regarded tree
-		SortedSet<UBTreeNode<C>> tree = this.T;
+//		SortedSet<UBTreeNode<C>> tree = this.T;
+		ArrayList<UBTreeNode<C>> tree = new ArrayList<UBTreeNode<C>>(this.T);
 		// currently regarded node
 		UBTreeNode<C> curNode = null;
 		boolean found;
@@ -64,12 +66,11 @@ public class UBTree<C extends Comparable<C>> {
 			C elem = iter.next();
 			// look if element already present
 			found = false;
-			for (UBTreeNode<C> node : tree) {
-				if (node.element.equals(elem)) {
-					curNode = node;
-					found = true;
-					break;
-				}
+			int i = tree.indexOf(new UBTreeNode<C>(elem));
+			if (i != -1) {
+				curNode = tree.get(i);
+				found = true;
+				break;
 			}
 			// introduce new node if element not found
 			if (!found) {
@@ -77,7 +78,7 @@ public class UBTree<C extends Comparable<C>> {
 				tree.add(curNode);
 			}
 			// consider children of current node
-			tree = curNode.children;
+			tree = new ArrayList<UBTreeNode<C>>(curNode.children);
 		}
 		// mark last node as end of path
 		curNode.endOfPath = true;
