@@ -27,10 +27,10 @@ import com.autoreason.setmincheck.setobjects.SetRepresent;
 public class RunExperiment {
 
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
-						
+
 		final String RESULT_FILE = "results.csv";
 		final int REPETITIONS = 20;
-			
+
 		// list of objects realizing different set representations
 		ArrayList<C> setRepList = new ArrayList<C>();
 		setRepList.add((C) new BitVectorSet());
@@ -56,34 +56,35 @@ public class RunExperiment {
 			// create writer
 			writer = new FileWriter(RESULT_FILE, true);
 			buffWriter = new BufferedWriter(writer);
-			
+
 			// write used classes to file as names for columns
-			String line = "test-file";				
+			String line = "test-file";
 			for (int i = 0; i < testedClasses.length; i++) {
-				line = line + "," + testedClasses[i];					
-			}			
+				line = line + "," + testedClasses[i];
+			}
 			buffWriter.write(line);
-			buffWriter.newLine();				
-			
-			// list all test files			
-			BufferedReader nameReader = new BufferedReader(new InputStreamReader(RunExperiment.class.getResourceAsStream("/fileNames.txt")));			
+			buffWriter.newLine();
+
+			// list all test files
+			BufferedReader nameReader = new BufferedReader(
+					new InputStreamReader(RunExperiment.class.getResourceAsStream("/fileNames.txt")));
 			String[] fileNames = nameReader.lines().toArray(String[]::new);
 			// conduct performance measurement for each test file
-			for (int i = 0; i < fileNames.length; i++) {			
+			for (int i = 0; i < fileNames.length; i++) {
 				String fileName = fileNames[i];
 				// show current experiment progress
-				System.out.println("running: " + (i+1) + "/" + fileNames.length);
-				
+				System.out.println("running: " + (i + 1) + "/" + fileNames.length);
+
 				// create DataProvider for data given in test file
 				dataProvider = new DataProvider("/files/" + fileName);
-												
+
 				// initialize arrays for measured times
 				measuredTimes = new long[testedClasses.length];
 				long[] currentTimes = new long[measuredTimes.length];
 				// repeat computation with different test sets
 				for (int k = 0; k < REPETITIONS; k++) {
 					// perform experiment
-					currentTimes = getTimeForMinCheck(setRepList, dataProvider, 20);	
+					currentTimes = getTimeForMinCheck(setRepList, dataProvider, 20);
 					// update times
 					for (int j = 0; j < currentTimes.length; j++) {
 						measuredTimes[j] += currentTimes[j];
@@ -96,17 +97,17 @@ public class RunExperiment {
 					measuredTimes[j] /= REPETITIONS;
 				}
 				// create String containing file name and results
-				line = fileName.substring(0, fileName.indexOf("."));				
+				line = fileName.substring(0, fileName.indexOf("."));
 				for (int k = 0; k < measuredTimes.length; k++) {
-					line = line + "," + measuredTimes[k];					
+					line = line + "," + measuredTimes[k];
 				}
 				// write results to file
 				buffWriter.write(line);
-				buffWriter.newLine();				
+				buffWriter.newLine();
 			}
 			nameReader.close();
 			buffWriter.close();
-			
+
 			// experiment finished
 			System.out.println("done");
 
@@ -139,6 +140,11 @@ public class RunExperiment {
 		int setRepNr = setRepList.size();
 		// convert the collections into the different provided set representations
 		ArrayList<ArrayList<NavigableSet<C>>> setRepConvertList = dataProvider.getConvertedCollections(setRepList);
+		// convert the collections into UBTree objects
+		ArrayList<UBTree<Integer>> ubTreeList = new ArrayList<UBTree<Integer>>();
+		for (Collection<Set<Integer>> col : dataProvider.fileCollections) {
+			ubTreeList.add(new UBTree<Integer>(col));
+		}
 		// create list to store measured time for each set representation
 		long[] measuredTimes = new long[setRepNr + 2];
 		// variables for time measuring
@@ -178,12 +184,7 @@ public class RunExperiment {
 				measuredTimes[i + 1] += end - start;
 			}
 
-//	TODO
-			// convert the collections into UBTree objects
-			ArrayList<UBTree<Integer>> ubTreeList = new ArrayList<UBTree<Integer>>();
-			for (Collection<Set<Integer>> col : dataProvider.fileCollections) {
-				ubTreeList.add(new UBTree<Integer>(col));
-			}
+			// use UBTree representation
 			// start time measuring
 			start = System.nanoTime();
 			// check minimality for each UBTree
