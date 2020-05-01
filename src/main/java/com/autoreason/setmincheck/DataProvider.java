@@ -33,9 +33,6 @@ public class DataProvider {
 	 */
 	Set testSet;
 
-	// TODO choose appropriate test objects (?)
-	// look for range of numbers or take subset of element (?) ...
-
 	/**
 	 * Construct a {@link DataProvider} object based on the data retrieved from the
 	 * given file
@@ -141,9 +138,6 @@ public class DataProvider {
 		Set<Integer> set = iter.next();
 		// remove set from collection
 		iter.remove();
-
-		// alter set TODO
-//		 set.remove(set.iterator().next());
 
 		return set;
 	}
