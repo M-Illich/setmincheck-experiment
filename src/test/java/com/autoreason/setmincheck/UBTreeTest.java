@@ -1,7 +1,6 @@
 package com.autoreason.setmincheck;
 
 import java.util.Collection;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -45,6 +44,7 @@ public class UBTreeTest {
 		ubTree.insert(set2);
 		int len2 = ubTree.T.first().children.first().children.size();
 		assertTrue(len2 == 2);
+				
 	}
 
 	@Test

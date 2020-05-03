@@ -78,7 +78,7 @@ public class RunExperiment {
 			// create DataProvider for data given in first test file
 			dataProvider = new DataProvider("/files/" + fileNames[0]);
 			// conduct experiment with gradually growing collection
-			measuredTimes = getTimeForMinCheckGrow(setRepList, dataProvider, 5);
+			measuredTimes = getTimeForMinCheckGrow(setRepList, dataProvider, MEASUREMENT_REPETITIONS);
 			// create String containing file name and results
 			line = "grow";
 			for (int k = 0; k < measuredTimes.length; k++) {

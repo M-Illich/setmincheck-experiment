@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -34,51 +33,48 @@ public class UBTree<C extends Comparable<C>> {
 			// insert sorted set to tree
 			insert(new TreeSet<C>(set));
 		}
-		// determine distances to next end-of-path markers (used for sorting)
-		for (UBTreeNode<C> node : T) {
-			node.determineDistanceToNextEOP();
-		}
 	}
 
 	/**
 	 * Insert a {@link SortedSet} into the UBTree
-	 * <p>
-	 * Note: Since the insertion of new elements can change a node's distance to the
-	 * next end-of-path marker, it is recommended to call
-	 * {@link UBTreeNode#determineDistanceToNextEOP()} on the root nodes of
-	 * {@code T} afterwards
-	 * </p>
 	 * 
 	 * @param set A {@link SortedSet}
 	 */
 	public void insert(SortedSet<C> set) {
 		// initialize currently regarded tree
-//		SortedSet<UBTreeNode<C>> tree = this.T;
-		ArrayList<UBTreeNode<C>> tree = new ArrayList<UBTreeNode<C>>(this.T);
+		SortedSet<UBTreeNode<C>> tree = this.T;
 		// currently regarded node
 		UBTreeNode<C> curNode = null;
 		boolean found;
 
+		// number of remaining set elements
+		int remain = set.size();
 		Iterator<C> iter = set.iterator();
 		// insert each element
 		while (iter.hasNext()) {
 			// get current element
 			C elem = iter.next();
+			remain--;
 			// look if element already present
 			found = false;
-			int i = tree.indexOf(new UBTreeNode<C>(elem));
-			if (i != -1) {
-				curNode = tree.get(i);
-				found = true;
-				break;
+			for (UBTreeNode<C> node : tree) {
+				if (node.element.equals(elem)) {
+					curNode = node;
+					// adapt distance to next EOP if necessary
+					if (curNode.distanceToNextEOP > remain) {
+						curNode.distanceToNextEOP = remain;
+					}
+					found = true;
+					break;
+				}
 			}
 			// introduce new node if element not found
 			if (!found) {
-				curNode = new UBTreeNode<C>(elem);
+				curNode = new UBTreeNode<C>(elem, remain);
 				tree.add(curNode);
 			}
 			// consider children of current node
-			tree = new ArrayList<UBTreeNode<C>>(curNode.children);
+			tree = curNode.children;
 		}
 		// mark last node as end of path
 		curNode.endOfPath = true;
@@ -151,6 +147,11 @@ public class UBTree<C extends Comparable<C>> {
 	 * Get the original set that is defined by the tree path ending with the given
 	 * node
 	 * 
+	 * <p>
+	 * Note: Here, only the last element of the set is returned, since its existence
+	 * is sufficient to determine minimality of a set
+	 * </p>
+	 * 
 	 * @param node A {@link UBTreeNode} with {@code endOfPath = true}
 	 * @return The original {@link SortedSet} whose last element relates to the
 	 *         given node
@@ -158,7 +159,7 @@ public class UBTree<C extends Comparable<C>> {
 	private SortedSet<C> getSet(UBTreeNode<C> node) {
 		SortedSet<C> set = new TreeSet<C>();
 
-		// TODO here, for minimality check sufficient to return last element, indicating
+		// here, for minimality check sufficient to return last element, indicating
 		// that a subset exists
 		set.add(node.element);
 
