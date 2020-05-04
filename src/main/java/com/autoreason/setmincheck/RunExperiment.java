@@ -2,24 +2,16 @@ package com.autoreason.setmincheck;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.TimeUnit;
 
-import com.autoreason.setfileconverter.FileSetConverter;
-import com.autoreason.setmincheck.datagenerator.SetGenerator;
 import com.autoreason.setmincheck.setobjects.BitVectorSet;
 import com.autoreason.setmincheck.setobjects.BitVectorSet2;
 import com.autoreason.setmincheck.setobjects.BoolVectorSet;
