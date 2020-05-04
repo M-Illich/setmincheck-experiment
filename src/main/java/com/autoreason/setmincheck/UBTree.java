@@ -17,6 +17,17 @@ public class UBTree<C extends Comparable<C>> {
 	// set of all root nodes of the included set trees
 	SortedSet<UBTreeNode<C>> T;
 
+	// Comparator based on distance to next end-of-path marker
+	Comparator<UBTreeNode<C>> distComparator = Comparator.comparing(n -> n, (a, b) -> {
+		int c = Integer.compare(a.distanceToNextEOP, b.distanceToNextEOP);
+		// use element for equal distances
+		if (c == 0) {
+			c = a.element.compareTo(b.element);
+		}
+		return c;
+	});
+
+	
 	public UBTree() {
 		T = new TreeSet<UBTreeNode<C>>();
 	}
@@ -45,6 +56,9 @@ public class UBTree<C extends Comparable<C>> {
 		SortedSet<UBTreeNode<C>> tree = this.T;
 		// currently regarded node
 		UBTreeNode<C> curNode = null;
+		// current element of set
+		C elem;
+		// states if element is already present in tree
 		boolean found;
 
 		// number of remaining set elements
@@ -53,7 +67,7 @@ public class UBTree<C extends Comparable<C>> {
 		// insert each element
 		while (iter.hasNext()) {
 			// get current element
-			C elem = iter.next();
+			elem = iter.next();
 			remain--;
 			// look if element already present
 			found = false;
@@ -93,22 +107,14 @@ public class UBTree<C extends Comparable<C>> {
 		// collection for subsets
 		Collection<SortedSet<C>> subsets = new ArrayList<SortedSet<C>>();
 
-		// Comparator based on distance to next end-of-path marker
-		Comparator<UBTreeNode<C>> distComparator = Comparator.comparing(n -> n, (a, b) -> {
-			int c = Integer.compare(a.distanceToNextEOP, b.distanceToNextEOP);
-			// use element for equal distances
-			if (c == 0) {
-				c = a.element.compareTo(b.element);
-			}
-			return c;
-		});
 		// find all nodes with a related set element and sort them by distance to next
 		// end-of-path marker
 		Collection<UBTreeNode<C>> matchNodes = new TreeSet<UBTreeNode<C>>(distComparator);
+		int c;
 		for (C e : set) {
 			for (UBTreeNode<C> node : treeNodes) {
 				// compare element with node element
-				int c = e.compareTo(node.element);
+				c = e.compareTo(node.element);
 				if (c <= 0) {
 					if (c == 0) {
 						// matching node found
@@ -120,12 +126,14 @@ public class UBTree<C extends Comparable<C>> {
 				}
 			}
 		}
-
+		
+		SortedSet<C> remainSet;
+		int remainSetSize;
 		// look for end-of-path marker, thus indicating a subset
 		for (UBTreeNode<C> node : matchNodes) {
 			// determine remaining set
-			SortedSet<C> remainSet = set.tailSet(node.element);
-			int remainSetSize = remainSet.size();
+			remainSet = set.tailSet(node.element);
+			remainSetSize = remainSet.size();
 			// only consider node if distance to next end-of-path marker is not greater than
 			// number of remaining elements
 			if (node.distanceToNextEOP <= remainSetSize) {
@@ -135,7 +143,7 @@ public class UBTree<C extends Comparable<C>> {
 				}
 				if (remainSetSize > 0) {
 					// consider children of node with remaining elements
-					subsets.addAll(lookup_subs(node.children, new TreeSet<C>(remainSet)));
+					subsets.addAll(lookup_subs(node.children, remainSet));
 				}
 			}
 		}

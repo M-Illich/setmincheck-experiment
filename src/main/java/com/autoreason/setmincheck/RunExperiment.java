@@ -33,7 +33,7 @@ public class RunExperiment {
 	final static int MEASUREMENT_REPETITIONS = 10;
 
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
-
+		
 		// list of objects realizing different set representations
 		ArrayList<C> setRepList = new ArrayList<C>();
 		setRepList.add((C) new BitVectorSet());
@@ -72,7 +72,7 @@ public class RunExperiment {
 			BufferedReader nameReader = new BufferedReader(
 					new InputStreamReader(RunExperiment.class.getResourceAsStream("/fileNames.txt")));
 			String[] fileNames = nameReader.lines().toArray(String[]::new);
-
+			
 			// show current experiment progress
 			System.out.println("running: " + "1/" + fileNames.length);
 			// create DataProvider for data given in first test file
