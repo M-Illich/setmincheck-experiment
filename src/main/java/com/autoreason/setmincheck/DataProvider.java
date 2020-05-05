@@ -31,7 +31,7 @@ public class DataProvider {
 	/**
 	 * A {@link Set} used for performing of set minimality check
 	 */
-	Set testSet;
+	Set<Integer> testSet;
 
 	/**
 	 * Construct a {@link DataProvider} object based on the data retrieved from the
@@ -56,7 +56,7 @@ public class DataProvider {
 	 *             sets generated with {@link SetFileConverter}
 	 * @param test A {@link Set}
 	 */
-	public DataProvider(String file, Set test) {
+	public DataProvider(String file, Set<Integer> test) {
 		// read collections from file
 		this.fileCollections = FileSetConverter.readCollectionsFromFile(file);
 		// define test set
@@ -128,7 +128,7 @@ public class DataProvider {
 	 * @param col A {@link Collection} of {@link Set} elements
 	 * @return A {@link Set} randomly drawn from {@code col}
 	 */
-	private Set generateTestSet(Collection<Set<Integer>> col) {
+	private Set<Integer> generateTestSet(Collection<Set<Integer>> col) {
 		// take random set from collection
 		int index = new Random().nextInt(col.size());
 		Iterator<Set<Integer>> iter = col.iterator();

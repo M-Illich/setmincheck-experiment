@@ -27,7 +27,6 @@ public class UBTree<C extends Comparable<C>> {
 		return c;
 	});
 
-	
 	public UBTree() {
 		T = new TreeSet<UBTreeNode<C>>();
 	}
@@ -126,7 +125,7 @@ public class UBTree<C extends Comparable<C>> {
 				}
 			}
 		}
-		
+
 		SortedSet<C> remainSet;
 		int remainSetSize;
 		// look for end-of-path marker, thus indicating a subset

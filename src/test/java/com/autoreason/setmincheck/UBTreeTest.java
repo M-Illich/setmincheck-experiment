@@ -44,7 +44,7 @@ public class UBTreeTest {
 		ubTree.insert(set2);
 		int len2 = ubTree.T.first().children.first().children.size();
 		assertTrue(len2 == 2);
-				
+
 	}
 
 	@Test
@@ -63,16 +63,16 @@ public class UBTreeTest {
 		n2.children.add(n6);
 		n3.children.add(n4);
 		n4.children.add(n5);
-		
+
 		TreeSet<UBTreeNode<Integer>> nodes = new TreeSet<UBTreeNode<Integer>>();
 		nodes.add(n0);
 		nodes.add(n3);
-		
+
 		Collection<UBTreeNode<Integer>> foundNodes = new UBTree<Integer>().findNodes(nodes, 4);
 		assertTrue(foundNodes.size() == 2);
 
 	}
-	
+
 	@Test
 	public void testLookup_subs() {
 		UBTreeNode<Integer> n0 = new UBTreeNode<Integer>(0);
@@ -89,13 +89,13 @@ public class UBTreeTest {
 		n2.children.add(n6);
 		n3.children.add(n4);
 		n4.children.add(n5);
-		
+
 		TreeSet<UBTreeNode<Integer>> nodes = new TreeSet<UBTreeNode<Integer>>();
 		n0.determineDistanceToNextEOP();
 		n3.determineDistanceToNextEOP();
 		nodes.add(n0);
 		nodes.add(n3);
-	
+
 		TreeSet<Integer> set = new TreeSet<Integer>();
 		set.add(0);
 		set.add(1);
@@ -104,6 +104,9 @@ public class UBTreeTest {
 		set.add(4);
 		set.add(5);
 		set.add(6);
+
+		// NOTE: loopup_subs only returns last element of found subset, since this is
+		// sufficient for the here intended determination of set minimality
 		TreeSet<Integer> sub1 = new TreeSet<Integer>();
 //		sub1.add(0);
 //		sub1.add(1);
@@ -116,24 +119,17 @@ public class UBTreeTest {
 //		sub2.add(1);
 //		sub2.add(2);		
 		sub2.add(6);
-		TreeSet<Integer> sub3 = new TreeSet<Integer>();		
+		TreeSet<Integer> sub3 = new TreeSet<Integer>();
 //		sub3.add(3);
 //		sub3.add(4);
 		sub3.add(5);
-		
+
 		Collection<SortedSet<Integer>> subsets = new UBTree<Integer>().lookup_subs(nodes, set);
-		
-//		for (SortedSet<Integer> sub : subsets) {
-//			for (Integer i : sub) {
-//				System.out.print(i + " ");
-//			}
-//			System.out.println();
-//		}
-		
+
 		assertTrue(subsets.contains(sub1));
 		assertTrue(subsets.contains(sub2));
 		assertTrue(subsets.contains(sub3));
-		
+
 	}
 
 }

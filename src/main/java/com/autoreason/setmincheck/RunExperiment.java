@@ -24,8 +24,9 @@ public class RunExperiment {
 	final static int EXPERIMENT_REPETITIONS = 20;
 	final static int MEASUREMENT_REPETITIONS = 10;
 
+	@SuppressWarnings("unchecked")
 	public static <C extends SetRepresent<C, ?, ?>> void main(String[] args) {
-		
+
 		// list of objects realizing different set representations
 		ArrayList<C> setRepList = new ArrayList<C>();
 		setRepList.add((C) new BitVectorSet());
@@ -64,7 +65,7 @@ public class RunExperiment {
 			BufferedReader nameReader = new BufferedReader(
 					new InputStreamReader(RunExperiment.class.getResourceAsStream("/fileNames.txt")));
 			String[] fileNames = nameReader.lines().toArray(String[]::new);
-			
+
 			// show current experiment progress
 			System.out.println("running: " + "1/" + fileNames.length);
 			// create DataProvider for data given in first test file
@@ -147,6 +148,7 @@ public class RunExperiment {
 	 *         {@link UBTree}
 	 * @see {@link System#nanoTime()}
 	 */
+	@SuppressWarnings("unchecked")
 	public static <C extends SetRepresent<C, ?, ?>> long[] getTimeForMinCheck(ArrayList<C> setRepList,
 			DataProvider dataProvider, int repeat) {
 		// get number of tested set representations
@@ -183,11 +185,11 @@ public class RunExperiment {
 			// conduct minimality check for each set representation
 			for (int i = 0; i < setRepNr; i++) {
 				// get MinimalityChecker instance for current SetRepresent implementation
-				MinimalityChecker<?> minChecker = setRepList.get(i).getMinChecker();
+				MinimalityChecker<C> minChecker = (MinimalityChecker<C>) setRepList.get(i).getMinChecker();
 				// start time measuring
 				start = System.nanoTime();
 				// check minimality for each collection
-				for (NavigableSet col : setRepConvertList.get(i)) {
+				for (NavigableSet<C> col : setRepConvertList.get(i)) {
 					// perform minimality check
 					minChecker.isMinimal(col, dataProvider.testSet);
 				}
@@ -241,6 +243,7 @@ public class RunExperiment {
 	 *         {@link UBTree}
 	 * @see {@link System#nanoTime()}
 	 */
+	@SuppressWarnings("unchecked")
 	public static <C extends SetRepresent<C, ?, ?>> long[] getTimeForMinCheckGrow(ArrayList<C> setRepList,
 			DataProvider dataProvider, int repeat) {
 		// collection of sets for minimality check
@@ -278,10 +281,10 @@ public class RunExperiment {
 				// get current set representation
 				C setRepresent = setRepList.get(i);
 				// get MinimalityChecker instance for current SetRepresent implementation
-				MinimalityChecker<?> minChecker = setRepresent.getMinChecker();
+				MinimalityChecker<C> minChecker = (MinimalityChecker<C>) setRepresent.getMinChecker();
 
 				// collection for set representations
-				NavigableSet convertSets = new TreeSet<C>();
+				NavigableSet<C> convertSets = new TreeSet<C>();
 				// start time measuring
 				start = System.nanoTime();
 				// gradually introduce each set of the collection
@@ -332,7 +335,7 @@ public class RunExperiment {
 	 * @return {@code true} if the collection {@code col} does not contain any
 	 *         subset of {@code testSet}, otherwise {@code false}
 	 */
-	private static boolean simpleMinimalityCheck(Collection<Set<Integer>> col, Set testSet) {
+	private static boolean simpleMinimalityCheck(Collection<Set<Integer>> col, Set<Integer> testSet) {
 		Collection<Set<Integer>> subsets = new HashSet<Set<Integer>>();
 		// get all subsets from collection
 		for (Set<Integer> set : col) {
