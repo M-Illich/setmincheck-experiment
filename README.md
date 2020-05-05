@@ -18,9 +18,9 @@ The implementations of the `set-minimality-checking` project are compared in ter
     ```
     which will generate a `jar` file located in the `docker` folder.
 	
-One possibility of performing the experiment is to directly execute this `jar`, leading to the creation of a file called `results.csv` that contains the measured times (in nanoseconds) for each test case. However, the recommended way is to build and run a docker image that, furthermore, creates plots for each performed test case.
+One possibility of performing the experiment is to directly execute this jar, leading to the creation of a file called `results.csv` that contains the measured times (in nanoseconds) for each test case. However, the recommended way is to build and run a docker image that, furthermore, creates plots for each performed test case.
 
-# Execution with docker (recommended)	
+# Execution with docker
 1. Move to the subfolder `docker` and call
 	```
 	docker build -t exp .
