@@ -31,5 +31,5 @@ One possibility of performing the experiment is to directly execute this jar, le
     ```
     docker run --mount type=bind,source=/absolute/path/on/host,target=/home/setmincheck-experiment/plots exp
     ```
-	where the `/absolute/path/on/host` must be an accessible path on the host machine and will contain pdf files with the plot for the results of each conducted test case. The plots are created after the experiment is finished, whose progress is indicated in the standard output.
+	where the `/absolute/path/on/host` must be an accessible path on the host machine and will contain pdf files with the plot for the results of each conducted test case. The plots are created after the experiment is finished, whose progress is displayed in the standard output.
 
