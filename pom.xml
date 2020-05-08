@@ -8,11 +8,20 @@
 	<version>1.0-SNAPSHOT</version>
 	<name>setmincheck-experiment</name>
 	<url>https://github.com/M-Illich/setmincheck-experiment.git</url>
+
 	<repositories>
 		<repository>
 			<id>ProjectRepo</id>
 			<name>ProjectRepo</name>
 			<url>file://${project.basedir}/lib</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+			</snapshots>
 		</repository>
 	</repositories>
 
@@ -22,6 +31,11 @@
 			<artifactId>junit</artifactId>
 			<version>4.13</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.autoreason.setmincheck</groupId>
+			<artifactId>set-file-converter</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.autoreason.setmincheck</groupId>
@@ -35,12 +49,8 @@
 			<version>1.0-SNAPSHOT</version>
 			<type>test-jar</type>
 		</dependency>
-		<dependency>
-			<groupId>com.autoreason.setmincheck</groupId>
-			<artifactId>set-file-converter</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
 	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
