@@ -1,4 +1,5 @@
 language: java
 jdk: oraclejdk13
 
-script: mvn clean verify
+install: mvn clean install
+script: mvn test -Dassembly.skipAssembly=true
