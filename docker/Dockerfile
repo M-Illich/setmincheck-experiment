@@ -1,4 +1,4 @@
-FROM openjdk:8u151-jdk
+FROM openjdk:13-slim
 
 WORKDIR /home/setmincheck-experiment
 	
