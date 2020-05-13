@@ -7,23 +7,11 @@
 	<packaging>jar</packaging>
 	<version>1.0-SNAPSHOT</version>
 	<name>setmincheck-experiment</name>
-	<url>https://github.com/M-Illich/setmincheck-experiment.git</url>
-
-	<repositories>
-		<repository>
-			<id>ProjectRepo</id>
-			<name>ProjectRepo</name>
-			<url>file://${project.basedir}/lib</url>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</snapshots>
-		</repository>
-	</repositories>
+	<url>https://github.com/M-Illich/setmincheck-experiment.git</url>	
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
 
 	<dependencies>
 		<dependency>
@@ -35,19 +23,12 @@
 		<dependency>
 			<groupId>com.autoreason.setmincheck</groupId>
 			<artifactId>set-file-converter</artifactId>
-			<version>1.0-SNAPSHOT</version>
+			<version>1.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.autoreason.setmincheck</groupId>
 			<artifactId>set-minimality-checking</artifactId>
 			<version>1.0-SNAPSHOT</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>com.autoreason.setmincheck</groupId>
-			<artifactId>set-minimality-checking</artifactId>
-			<version>1.0-SNAPSHOT</version>
-			<type>test-jar</type>
 		</dependency>
 	</dependencies>
 
@@ -57,10 +38,11 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>13</source>
+					<target>13</target>
 				</configuration>
 			</plugin>
+
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>
@@ -83,6 +65,15 @@
 					</execution>
 				</executions>
 			</plugin>
+
 		</plugins>
 	</build>
+	
+	<distributionManagement>
+		<snapshotRepository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/m-illich/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+	
 </project>
