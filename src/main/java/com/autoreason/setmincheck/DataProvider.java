@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import com.autoreason.setfileconverter.FileSetConverter;
 import com.autoreason.setfileconverter.SetFileConverter;
 import com.autoreason.setmincheck.datagenerator.SetGenerator;
+import com.autoreason.setmincheck.setobjects.ExpSetRepresent;
 import com.autoreason.setmincheck.setobjects.SetRepresent;
 
 public class DataProvider {
@@ -93,27 +94,33 @@ public class DataProvider {
 
 	/**
 	 * Convert all the sets from {@link DataProvider#fileCollections} to
-	 * representative objects of type {@link SetRepresent}
+	 * representative objects of type {@code S} determined by provided
+	 * {@link ExpSetRepresent} implementations
 	 * 
-	 * @param setRepList An {@link ArrayList} with objects of different types
-	 *                   {@code C} used to convert the sets
+	 * @param <E>        An implementation of {@link ExpSetRepresent} for type
+	 *                   {@code S}
+	 * @param <S>        An implementation of both {@link SetRepresent} and
+	 *                   {@link Comparable}
+	 * 
+	 * @param setRepList An {@link ArrayList} with objects of different
+	 *                   {@link ExpSetRepresent} implementations
 	 * @return An {@link ArrayList} containing {@link Collection} elements with
-	 *         objects of type {@code C} representing the sets from
+	 *         objects of type {@code S} representing the sets from
 	 *         {@link DataProvider#fileCollections}
 	 */
-	public <C extends SetRepresent<C, ?, ?>> ArrayList<ArrayList<NavigableSet<C>>> getConvertedCollections(
-			ArrayList<C> setRepList) {
+	public <E extends ExpSetRepresent<S>, S extends SetRepresent<?> & Comparable<S>> ArrayList<ArrayList<NavigableSet<S>>> getConvertedCollections(
+			ArrayList<E> setRepList) {
 		// list to store all the lists with differently converted collections of sets
-		ArrayList<ArrayList<NavigableSet<C>>> setRepConvertList = new ArrayList<ArrayList<NavigableSet<C>>>();
+		ArrayList<ArrayList<NavigableSet<S>>> setRepConvertList = new ArrayList<ArrayList<NavigableSet<S>>>();
 
 		// convert collections to each provided type
-		for (C c : setRepList) {
+		for (E e : setRepList) {
 			// list to store converted collections
-			ArrayList<NavigableSet<C>> convertList = new ArrayList<NavigableSet<C>>();
+			ArrayList<NavigableSet<S>> convertList = new ArrayList<NavigableSet<S>>();
 			// convert each collection
 			for (Collection<Set<Integer>> collection : fileCollections) {
 				// add sorted converted collection to list
-				convertList.add(new TreeSet<C>(c.convertCollection(collection)));
+				convertList.add(new TreeSet<S>(e.convertCollection(collection)));
 			}
 			setRepConvertList.add(convertList);
 		}
