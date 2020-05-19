@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import com.autoreason.setmincheck.setobjects.ExpBitVectorSet;
-import com.autoreason.setmincheck.setobjects.ExpBitVectorSet2;
+import com.autoreason.setmincheck.setobjects.ExpSumVectorSet;
 import com.autoreason.setmincheck.setobjects.ExpBoolVectorSet;
 import com.autoreason.setmincheck.setobjects.ExpBoolVectorSet2;
 import com.autoreason.setmincheck.setobjects.ExpSetRepresent;
@@ -30,10 +30,10 @@ public class RunExperiment {
 
 		// list of objects realizing different set representations
 		ArrayList<E> setRepList = new ArrayList<E>();
-		setRepList.add((E) new ExpBitVectorSet());
-//		setRepList.add((E) new ExpBitVectorSet2());
+		setRepList.add((E) new ExpBitVectorSet());		
 		setRepList.add((E) new ExpBoolVectorSet());
 		setRepList.add((E) new ExpBoolVectorSet2());
+		setRepList.add((E) new ExpSumVectorSet());
 
 		// array with names of executed classes
 		String[] testedClasses = new String[setRepList.size() + 2];
