@@ -13,12 +13,18 @@ The implementations of the `set-minimality-checking` project are compared in ter
    ```
 
 2. Go to the root directory of the repository and invoke the following command
+	```
+    powershell mkdir -force ~/.m2 ; cp settings.xml ~/.m2/settings.xml
+    ```
+	in order to establish a connection to the external repository that contains the project's dependencies.
+
+3. Install the maven project via
     ```
     mvn clean install
     ```
     which will generate a `jar` file located in the `docker` folder.
 	
-One possibility of performing the experiment is to directly execute this jar, leading to the creation of a file called `results.csv` that contains the measured times (in nanoseconds) for each test case. However, the recommended way is to build and run a docker image as described below, which furthermore creates plots for each performed test case.
+One possibility of performing the experiment is to directly execute this jar, leading to the creation of a file called `results.csv` that contains a table of the measured times (in nanoseconds) for each test case. However, the recommended way is to build and run a docker image as described below, which furthermore creates plots for each performed test case.
 
 # Execution with docker
 1. Move in the repository to the subfolder `docker` and call
