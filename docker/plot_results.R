@@ -18,8 +18,10 @@ for (i in 1:fileNum) {
 for (i in 1:fileNum) {
   # create pdf for plot
   pdf(paste0("plots/plot_", fileNames[i], ".pdf"), width = 10)
-  barplot(
-    unlist(results[i, 2:(objectNum + 1)]),
+  y <- unlist(results[i, 2:(objectNum + 1)])
+  x <- barplot(
+    y,
+    ylim = c(0,max(y)*1.1),
     xlab = "test objects",
     ylab = "relative execution time",
     main = fileNames[i],
@@ -28,6 +30,7 @@ for (i in 1:fileNum) {
     axis.lty = 1,
     las = 1
   )
+  text(x,(y + max(y)/20),labels=as.character(floor(y * 100)/100))
 }
 
 dev.off()
