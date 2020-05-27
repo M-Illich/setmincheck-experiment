@@ -38,7 +38,7 @@ target/
 *.csv
 
 # large files
-/big-test-files/
+/big-test-files/*
 
 # R 
 .Rhistory

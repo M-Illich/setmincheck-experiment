@@ -24,8 +24,8 @@ import com.autoreason.setmincheck.setobjects.SetRepresent;
 public class RunExperiment {
 
 	final static String RESULT_FILE = "results.csv";
-	final static int EXPERIMENT_REPETITIONS = 20;
-	final static int MEASUREMENT_REPETITIONS = 10;
+	final static int EXPERIMENT_REPETITIONS = 15;
+	final static int MEASUREMENT_REPETITIONS = 5;
 
 	@SuppressWarnings("unchecked")
 	public static <E extends ExpSetRepresent<S>, S extends SetRepresent<?> & Comparable<S>> void main(String[] args) {
