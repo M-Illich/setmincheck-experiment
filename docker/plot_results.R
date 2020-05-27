@@ -17,7 +17,7 @@ fileNames <- results[, 1]
 # plot results
 for (i in 1:fileNum) {
   # create pdf for plot
-  pdf(paste0("plots/plot_", fileNames[i], ".pdf"), width = 10)
+  pdf(paste0("plots/plot_", fileNames[i], ".pdf"), width = 10.5)
   y <- floor(unlist(results[i, 2:(objectNum + 1)]) / 1000)
   x <- barplot(
     y,
