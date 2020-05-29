@@ -15,15 +15,9 @@ The implementations of the `set-minimality-checking` project are compared in ter
    git clone https://github.com/M-Illich/setmincheck-experiment.git
    ```
 
-2. Go to the root directory of the repository and invoke the following command
-	```
-    powershell mkdir -force ~/.m2 ; cp settings.xml ~/.m2/settings.xml
+2. Go to the root directory of the repository and install the maven project with the following command
     ```
-	in order to establish a connection to the external repository that contains the project's dependencies.
-
-3. Install the maven project via
-    ```
-    mvn clean install
+    mvn clean install -s settings.xml
     ```
     which will generate a `jar` file located in the `docker` folder.
 	
