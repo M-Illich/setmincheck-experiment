@@ -5,6 +5,5 @@ cache:
   directories:
     - $HOME/.m2 
 
-before install: powershell mkdir -force ~/.m2 ; cp settings.xml ~/.m2/settings.xml
-install: mvn clean install -DskipTests=true -U
+install: mvn clean install -DskipTests=true -s settings.xml -U
 script: mvn test -Dassembly.skipAssembly=true
