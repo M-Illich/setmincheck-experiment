@@ -7,7 +7,7 @@ The implementations of the `set-minimality-checking` project are compared in ter
 - [java v.8+](http://java.com) and [maven v.3+](https://maven.apache.org/)
 - [Docker](https://www.docker.com) for creating and running a docker image
   (The initially available memory of 2GB should be changed to `7GB`, based on the instructions for [Windows](https://docs.docker.com/docker-for-windows/#resources) or [Mac](https://docs.docker.com/docker-for-mac/#resources))
-- [GitHub] account and a [personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token) with `read:packages` scope
+- [GitHub](https://github.com/) account and a [personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token) with `read:packages` scope
   
 
 # Preparations
