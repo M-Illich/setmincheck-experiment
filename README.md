@@ -5,8 +5,9 @@ The implementations of the `set-minimality-checking` project are compared in ter
 
 # Prerequisites: 
 - [java v.8+](http://java.com) and [maven v.3+](https://maven.apache.org/)
-- [docker](https://www.docker.com) for creating and running a docker image
+- [Docker](https://www.docker.com) for creating and running a docker image
   (The initially available memory of 2GB should be changed to `7GB`, based on the instructions for [Windows](https://docs.docker.com/docker-for-windows/#resources) or [Mac](https://docs.docker.com/docker-for-mac/#resources))
+- [GitHub] account and a [personal access token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line#creating-a-token) with `read:packages` scope
   
 
 # Preparations
@@ -17,9 +18,9 @@ The implementations of the `set-minimality-checking` project are compared in ter
 
 2. Go to the root directory of the repository and install the maven project with the following command
     ```
-    mvn clean install -s settings.xml
+    mvn -Dusername="USER_NAME" -Dtoken="PERSONAL_ACCESS_TOKEN" clean install -s settings.xml
     ```
-    which will generate a `jar` file located in the `docker` folder.
+	which will generate a `jar` file located in the `docker` folder. For that, both the terms `USER_NAME` and `PERSONAL_ACCESS_TOKEN` have to be replaced by the appropriate values of the used GitHub account, in order to access the external dependency packages.
 	
 One possibility of performing the experiment is to directly execute this jar, leading to the creation of a file called `results.csv` that contains a table of the measured times (in nanoseconds) for each test case. However, the recommended way is to build and run a docker image as described below, which furthermore creates plots for each performed test case.
 
