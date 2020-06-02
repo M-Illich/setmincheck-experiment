@@ -4,9 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.autoreason.setmincheck.AbSetRepSubsetChecker;
 import com.autoreason.setmincheck.MatchProvider;
-import com.autoreason.setmincheck.SubsetChecker;
 
 /**
  * An {@link ExpSetRepresent} implementation for {@link SumVectorSet}
@@ -17,11 +15,6 @@ public class ExpSumVectorSet implements ExpSetRepresent<SumVectorSet> {
 	@Override
 	public MatchProvider<SumVectorSet, Set<?>> getMatchProvider() {
 		return new SumVecSetMatchProvider();
-	}
-
-	@Override
-	public SubsetChecker<SumVectorSet> getSubsetChecker() {
-		return new AbSetRepSubsetChecker<SumVectorSet>();
 	}
 
 	@Override
@@ -36,7 +29,7 @@ public class ExpSumVectorSet implements ExpSetRepresent<SumVectorSet> {
 
 		return convertedCol;
 	}
-	
+
 	@Override
 	public SumVectorSet getSetRepresent(Set<?> set) {
 		return new SumVectorSet(set);

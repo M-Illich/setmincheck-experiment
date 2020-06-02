@@ -205,14 +205,13 @@ public class RunExperiment {
 				// prepare currently tested SetRepresent implementation
 				ExpSetRepresent<S> expSetRep = setRepList.get(i);
 				MatchProvider<S, Set<?>> matchProvider = expSetRep.getMatchProvider();
-				SubsetChecker<S> subsetChecker = expSetRep.getSubsetChecker();
-
+				
 				// start time measuring
 				start = System.nanoTime();
 				// check minimality for each collection
 				for (NavigableSet<S> col : setRepConvertList.get(i)) {
 					// perform minimality check
-					SetMinimalityChecker.<S>isMinimal(col, dataProvider.testSet, matchProvider, subsetChecker);
+					SetMinimalityChecker.<S>isMinimal(col, dataProvider.testSet, matchProvider);
 				}
 				// end time measuring
 				end = System.nanoTime();
@@ -317,8 +316,7 @@ public class RunExperiment {
 				// prepare currently tested SetRepresent implementation
 				ExpSetRepresent<S> expSetRep = setRepList.get(i);
 				MatchProvider<S, Set<?>> matchProvider = expSetRep.getMatchProvider();
-				SubsetChecker<S> subsetChecker = expSetRep.getSubsetChecker();
-
+				
 				// collection for set representations
 				NavigableSet<S> convertSets = new TreeSet<S>();
 				// start time measuring
@@ -328,7 +326,7 @@ public class RunExperiment {
 					// add converted set to collection
 					convertSets.add(expSetRep.getSetRepresent(set));
 					// perform minimality check
-					SetMinimalityChecker.<S>isMinimal(convertSets, dataProvider.testSet, matchProvider, subsetChecker);
+					SetMinimalityChecker.<S>isMinimal(convertSets, dataProvider.testSet, matchProvider);
 
 				}
 				// end time measuring

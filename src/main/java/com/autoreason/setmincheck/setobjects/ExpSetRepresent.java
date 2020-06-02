@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.Set;
 
 import com.autoreason.setmincheck.MatchProvider;
-import com.autoreason.setmincheck.SubsetChecker;
 
 /**
  * An interface that defines methods needed for the experiment with the
@@ -25,15 +24,6 @@ public interface ExpSetRepresent<S extends SetRepresent<?> & Comparable<S>> {
 	 *         {@code S}
 	 */
 	public MatchProvider<S, Set<?>> getMatchProvider();
-
-	/**
-	 * Get a {@link SubsetChecker} instance for objects of the {@link SetRepresent}
-	 * type {@code S}
-	 * 
-	 * @return An object of the {@code SubsetChecker} implementation for type
-	 *         {@code S}
-	 */
-	public SubsetChecker<S> getSubsetChecker();
 
 	/**
 	 * Convert the {@link Set} elements of a {@link Collection} into instances of

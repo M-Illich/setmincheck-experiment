@@ -4,9 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.autoreason.setmincheck.AbSetRepSubsetChecker;
 import com.autoreason.setmincheck.MatchProvider;
-import com.autoreason.setmincheck.SubsetChecker;
 
 /**
  * An {@link ExpSetRepresent} implementation for {@link BoolVectorSet}
@@ -17,11 +15,6 @@ public class ExpBoolVectorSet implements ExpSetRepresent<BoolVectorSet> {
 	@Override
 	public MatchProvider<BoolVectorSet, Set<?>> getMatchProvider() {
 		return new BoolVecSetMatchProvider();
-	}
-
-	@Override
-	public SubsetChecker<BoolVectorSet> getSubsetChecker() {
-		return new AbSetRepSubsetChecker<BoolVectorSet>();
 	}
 
 	@Override
