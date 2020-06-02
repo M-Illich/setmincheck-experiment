@@ -20,7 +20,6 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 13
-    - name: Copy settings.xml
-      run: mkdir -p ~/.m2 && cp settings.xml ~/.m2/settings.xml  
-    - name: Build with Maven
-      run: mvn -B package --file pom.xml -U
+    
+    - name: Build with Maven      
+      run: mvn -B -Dusername="M-Illich" -Dtoken=${{ secrets.DEPENDENCYACCESS }} package --file pom.xml -s settings.xml -U

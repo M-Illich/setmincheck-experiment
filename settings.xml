@@ -26,8 +26,8 @@
   <servers>
     <server>
       <id>github</id>
-      <username>M-Illich</username>
-      <password>c81c0fcef7fd87d3e16c2d86e55019334a42bfd3</password>
-    </server>
+      <username>${username}</username>
+      <password>${token}</password>
+    </server>	
   </servers>
 </settings>

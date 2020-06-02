@@ -73,12 +73,5 @@
 
 		</plugins>
 	</build>
-
-	<distributionManagement>
-		<snapshotRepository>
-			<id>github</id>
-			<url>https://maven.pkg.github.com/m-illich/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
-
+	
 </project>
