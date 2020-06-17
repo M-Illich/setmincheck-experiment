@@ -186,15 +186,14 @@ public class RunExperiment {
 			for (int i = 0; i < setRepNr; i++) {
 				// prepare currently tested SetRepresent implementation
 				ExpSetRepresent<S, R> expSetRep = setRepList.get(i);
-				//MatchProvider<S, Set<?>> matchProvider = expSetRep.getMatchProvider(dataProvider.testSet);	
-				// TODO converting of test set should be considered as well
 
 				// start time measuring
 				start = System.nanoTime();
 				// check minimality for each collection
 				for (NavigableSet<S> col : setRepConvertList.get(i)) {
 					// perform minimality check
-					SetMinimalityChecker.<S>isMinimal(col, dataProvider.testSet, expSetRep.getMatchProvider(dataProvider.testSet));
+					SetMinimalityChecker.<S>isMinimal(col, dataProvider.testSet,
+							expSetRep.getMatchProvider(dataProvider.testSet));
 				}
 				// end time measuring
 				end = System.nanoTime();
