@@ -108,19 +108,30 @@ public class DataProvider {
 	 *         objects of type {@code S} representing the sets from
 	 *         {@link DataProvider#fileCollections}
 	 */
-	public <E extends ExpSetRepresent<S>, S extends SetRepresent<?> & Comparable<S>> ArrayList<ArrayList<NavigableSet<S>>> getConvertedCollections(
+	public <E extends ExpSetRepresent<S, R>, S extends SetRepresent<R> & Comparable<S>, R> ArrayList<ArrayList<NavigableSet<S>>> getConvertedCollections(
 			ArrayList<E> setRepList) {
 		// list to store all the lists with differently converted collections of sets
 		ArrayList<ArrayList<NavigableSet<S>>> setRepConvertList = new ArrayList<ArrayList<NavigableSet<S>>>();
+
+		// define set representation (bit vector) length as maximum size of the
+		// collections' sets
+		int setRepLen = getMaxSetSize();
 
 		// convert collections to each provided type
 		for (E e : setRepList) {
 			// list to store converted collections
 			ArrayList<NavigableSet<S>> convertList = new ArrayList<NavigableSet<S>>();
+			// set bit vector length for related SetRepresent implementation
+			e.setSetRepLength(setRepLen);
+
 			// convert each collection
 			for (Collection<Set<Integer>> collection : fileCollections) {
+				TreeSet<S> ts = new TreeSet<S>(new KeepSameSetRepComparator<S>()); // keep duplicates, since two equal
+																					// set representations may by the
+																					// result of two different sets
+				ts.addAll(e.convertCollection(collection));
 				// add sorted converted collection to list
-				convertList.add(new TreeSet<S>(e.convertCollection(collection)));
+				convertList.add(ts);
 			}
 			setRepConvertList.add(convertList);
 		}
@@ -159,6 +170,42 @@ public class DataProvider {
 	}
 
 	/**
+	 * Get the maximum size of the {@link Set} elements in {@link #fileCollections}
+	 * 
+	 * @return An {@code int} indicating the maximum set size encountered in
+	 *         {@link #fileCollections}
+	 */
+	public int getMaxSetSize() {
+		int maxSize = 0;
+		for (Collection<Set<Integer>> collection : fileCollections) {
+			for (Set<Integer> set : collection) {
+				if (set.size() > maxSize) {
+					maxSize = set.size();
+				}
+			}
+		}
+		return maxSize;
+	}
+
+//	/**
+//	 * Get the average size of the {@link Set} elements in {@link #fileCollections}
+//	 * 
+//	 * @return An {@code int} indicating the average set size encountered in
+//	 *         {@link #fileCollections}
+//	 */
+//	private int getAvgSetSize() {
+//		int avgSize = 0;
+//		int num = 0;
+//		for (Collection<Set<Integer>> collection : fileCollections) {
+//			for (Set<Integer> set : collection) {
+//				avgSize += set.size();
+//				num++;
+//			}
+//		}
+//		return avgSize / num;
+//	}
+
+	/**
 	 * Write all the names of the test files given in {@code RESOURCE_FOLDER} to the
 	 * file {@code fileNames.txt}
 	 */
@@ -184,11 +231,33 @@ public class DataProvider {
 	}
 
 	public static void main(String[] args) {
-		int numCols = 1;
+		
+//		ArrayList<Collection<Set<Integer>>> cols = FileSetConverter.readCollectionsFromFile("/files/rndmCols-1x300x10000.txt");
+//		int max = 0;
+//		for (Collection<Set<Integer>> col : cols) {
+//			for (Set<Integer> set : col) {
+//				for (Integer i : set) {
+//					if(i > max) {
+//						max = i;
+//					}
+//				}
+//			}
+//		}
+//		System.out.println(max);
+		
+		/*
+		 * case: 			seed: 
+		 * 5x1000x1000 		123456789 
+		 * 3x3000x3000 		987654321
+		 * 2x30000x256		192837465
+		 * 3x300x10000		103201002
+		 */
+
+		int numCols = 3;
 		int numSets = 300;
 		int maxSize = 10000;
-		int range = 30000;
-		long seed = 3537;
+		int range = numSets * 3 >= maxSize * 3 ?  numSets * 3 : maxSize * 3;
+		long seed = 103201002;
 		String file = RESOURCE_FOLDER + "files\\rndmCols-" + numCols + "x" + numSets + "x" + maxSize + ".txt";
 
 		// generate files with test data

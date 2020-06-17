@@ -4,18 +4,13 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.autoreason.setmincheck.MatchProvider;
+import com.autoreason.setmincheck.AbstractSetRepMatchProvider;
 
 /**
  * An {@link ExpSetRepresent} implementation for {@link BitVectorSet}
  *
  */
-public class ExpBitVectorSet implements ExpSetRepresent<BitVectorSet> {
-
-	@Override
-	public MatchProvider<BitVectorSet, Set<?>> getMatchProvider() {
-		return new BitVecSetMatchProvider();
-	}
+public class ExpBitVectorSet implements ExpSetRepresent<BitVectorSet, long[]> {
 
 	@Override
 	public Collection<BitVectorSet> convertCollection(Collection<Set<Integer>> col) {
@@ -33,6 +28,16 @@ public class ExpBitVectorSet implements ExpSetRepresent<BitVectorSet> {
 	@Override
 	public BitVectorSet getSetRepresent(Set<?> set) {
 		return new BitVectorSet(set);
+	}
+
+	@Override
+	public void setSetRepLength(int len) {
+		BitVectorSetConverter.setRepresentLength = len;
+	}
+
+	@Override
+	public AbstractSetRepMatchProvider<BitVectorSet, long[]> getMatchProvider(Set<?> test) {
+		return new BitVecSetMatchProvider(test);
 	}
 
 }

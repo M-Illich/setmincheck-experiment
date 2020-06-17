@@ -10,12 +10,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.NavigableSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.liveontologies.puli.collections.BloomTrieCollection2;
 
 import com.autoreason.setmincheck.setobjects.ExpBitVectorSet;
-import com.autoreason.setmincheck.setobjects.ExpSumVectorSet;
 import com.autoreason.setmincheck.setobjects.ExpBoolVectorSet;
 import com.autoreason.setmincheck.setobjects.ExpBoolVectorSet2;
 import com.autoreason.setmincheck.setobjects.ExpSetRepresent;
@@ -24,18 +22,18 @@ import com.autoreason.setmincheck.setobjects.SetRepresent;
 public class RunExperiment {
 
 	final static String RESULT_FILE = "results.csv";
-	final static int EXPERIMENT_REPETITIONS = 15;
+	final static int EXPERIMENT_REPETITIONS = 20;
 	final static int MEASUREMENT_REPETITIONS = 5;
 
 	@SuppressWarnings("unchecked")
-	public static <E extends ExpSetRepresent<S>, S extends SetRepresent<?> & Comparable<S>> void main(String[] args) {
+	public static <E extends ExpSetRepresent<S, R>, S extends SetRepresent<R> & Comparable<S>, R> void main(
+			String[] args) {
 
 		// list of objects realizing different set representations
 		ArrayList<E> setRepList = new ArrayList<E>();
 		setRepList.add((E) new ExpBitVectorSet());
 		setRepList.add((E) new ExpBoolVectorSet());
 		setRepList.add((E) new ExpBoolVectorSet2());
-		setRepList.add((E) new ExpSumVectorSet());
 
 		// array with names of executed classes
 		String[] testedClasses = new String[setRepList.size() + 3];
@@ -70,24 +68,8 @@ public class RunExperiment {
 					new InputStreamReader(RunExperiment.class.getResourceAsStream("/fileNames.txt")));
 			String[] fileNames = nameReader.lines().toArray(String[]::new);
 
-			// show current experiment progress
-			System.out.println("running: " + "1/" + fileNames.length);
-			// create DataProvider for data given in first test file
-			dataProvider = new DataProvider("/files/" + fileNames[0]);
-
-			// conduct experiment with gradually growing collection
-			measuredTimes = getTimeForMinCheckGrow(setRepList, dataProvider, MEASUREMENT_REPETITIONS);
-			// create String containing file name and results
-			line = "grow";
-			for (int k = 0; k < measuredTimes.length; k++) {
-				line = line + "," + measuredTimes[k];
-			}
-			// write results to file
-			buffWriter.write(line);
-			buffWriter.newLine();
-
 			// conduct performance measurement for each test file
-			for (int i = 1; i < fileNames.length; i++) {
+			for (int i = 0; i < fileNames.length; i++) {
 				String fileName = fileNames[i];
 				// show current experiment progress
 				System.out.println("running: " + (i + 1) + "/" + fileNames.length);
@@ -156,7 +138,7 @@ public class RunExperiment {
 	 *         on {@link BloomTrieCollection2} and {@link UBTree}
 	 * @see {@link System#nanoTime()}
 	 */
-	public static <E extends ExpSetRepresent<S>, S extends SetRepresent<?> & Comparable<S>> long[] getTimeForMinCheck(
+	public static <E extends ExpSetRepresent<S, R>, S extends SetRepresent<R> & Comparable<S>, R> long[] getTimeForMinCheck(
 			ArrayList<E> setRepList, DataProvider dataProvider, int repeat) {
 		// get number of tested set representations
 		int setRepNr = setRepList.size();
@@ -203,15 +185,16 @@ public class RunExperiment {
 			// conduct minimality check for each set representation
 			for (int i = 0; i < setRepNr; i++) {
 				// prepare currently tested SetRepresent implementation
-				ExpSetRepresent<S> expSetRep = setRepList.get(i);
-				MatchProvider<S, Set<?>> matchProvider = expSetRep.getMatchProvider();
-				
+				ExpSetRepresent<S, R> expSetRep = setRepList.get(i);
+				//MatchProvider<S, Set<?>> matchProvider = expSetRep.getMatchProvider(dataProvider.testSet);	
+				// TODO converting of test set should be considered as well
+
 				// start time measuring
 				start = System.nanoTime();
 				// check minimality for each collection
 				for (NavigableSet<S> col : setRepConvertList.get(i)) {
 					// perform minimality check
-					SetMinimalityChecker.<S>isMinimal(col, dataProvider.testSet, matchProvider);
+					SetMinimalityChecker.<S>isMinimal(col, dataProvider.testSet, expSetRep.getMatchProvider(dataProvider.testSet));
 				}
 				// end time measuring
 				end = System.nanoTime();
@@ -246,131 +229,6 @@ public class RunExperiment {
 			measuredTimes[measuredTimes.length - 1] += end - start;
 
 		}
-		// compute average
-		for (int i = 0; i < measuredTimes.length; i++) {
-			measuredTimes[i] /= repeat;
-		}
-
-		return measuredTimes;
-
-	}
-
-	/**
-	 * Measure the performance time for conducting set minimality checking, where
-	 * the collection of sets is gradually increased in order to additionally take
-	 * into account the building time of the deployed set representations
-	 * 
-	 * @param <E>          An implementation of {@link ExpSetRepresent} for type
-	 *                     {@code S}
-	 * @param <S>          An implementation of both {@link SetRepresent} and
-	 *                     {@link Comparable}
-	 * @param setRepList   An {@link ArrayList} containing different
-	 *                     {@link ExpSetRepresent} implementations used to perform
-	 *                     set minimality checking
-	 * @param dataProvider A {@link DataProvider} providing the sets for the
-	 *                     minimality checking
-	 * @param repeat       An {@code int} defining how often the process is repeated
-	 *                     to allow more accurate time measurements
-	 * @return An {@code long[]} containing values that represent the measured time
-	 *         in nanoseconds, whereby the first element contains the time for the
-	 *         standard approach of considering every set in a collection until a
-	 *         subset is found, while the remaining list entries relate to each
-	 *         element of {@code setRepList}, followed by the representations based
-	 *         on {@link BloomTrieCollection2} and {@link UBTree}
-	 * @see {@link System#nanoTime()}
-	 */
-	public static <E extends ExpSetRepresent<S>, S extends SetRepresent<?> & Comparable<S>> long[] getTimeForMinCheckGrow(
-			ArrayList<E> setRepList, DataProvider dataProvider, int repeat) {
-		// collection of sets for minimality check
-		Collection<Set<Integer>> setCol = dataProvider.fileCollections.get(0);
-		// test set used for minimality check w.r.t. collection of sets
-		Set<Integer> testSet = dataProvider.testSet;
-
-		// get number of tested set representations
-		int setRepNr = setRepList.size();
-		// create list to store measured time for each set representation
-		long[] measuredTimes = new long[setRepNr + 3];
-		// variables for time measuring
-		long start;
-		long end;
-
-		// repeat process for more accurate time measurement
-		for (int j = 0; j < repeat; j++) {
-			Collection<Set<Integer>> col = new HashSet<Set<Integer>>();
-			// start time measuring
-			start = System.nanoTime();
-			// gradually introduce each set of the collection
-			for (Set<Integer> set : setCol) {
-				// increase collection
-				col.add(set);
-				// perform simple minimality check
-				simpleMinimalityCheck(col, testSet);
-			}
-			// end time measuring
-			end = System.nanoTime();
-			// save measurement for current set representation
-			measuredTimes[0] += end - start;
-
-			// conduct minimality check for each set representation
-			for (int i = 0; i < setRepNr; i++) {
-				// prepare currently tested SetRepresent implementation
-				ExpSetRepresent<S> expSetRep = setRepList.get(i);
-				MatchProvider<S, Set<?>> matchProvider = expSetRep.getMatchProvider();
-				
-				// collection for set representations
-				NavigableSet<S> convertSets = new TreeSet<S>();
-				// start time measuring
-				start = System.nanoTime();
-				// gradually introduce each set of the collection
-				for (Set<Integer> set : setCol) {
-					// add converted set to collection
-					convertSets.add(expSetRep.getSetRepresent(set));
-					// perform minimality check
-					SetMinimalityChecker.<S>isMinimal(convertSets, dataProvider.testSet, matchProvider);
-
-				}
-				// end time measuring
-				end = System.nanoTime();
-				// save measurement for current set representation
-				measuredTimes[i + 1] += end - start;
-			}
-
-			// test BloomTrieCollection2 representation
-			BloomTrieCollection2<Set<Integer>> trie = new BloomTrieCollection2<Set<Integer>>();
-			for (Set<Integer> set : col) {
-				trie.add(set);
-			}
-			// start time measuring
-			start = System.nanoTime();
-			// gradually introduce each set of the collection
-			for (Set<Integer> set : setCol) {
-				// add set to BloomTrie
-				trie.add(set);
-				// perform minimality check
-				trie.isMinimal(testSet);
-			}
-			// end time measuring
-			end = System.nanoTime();
-			// save measurement
-			measuredTimes[measuredTimes.length - 2] += end - start;
-
-			// test UBTree representation
-			UBTree<Integer> ubTree = new UBTree<Integer>();
-			// start time measuring
-			start = System.nanoTime();
-			// gradually introduce each set of the collection
-			for (Set<Integer> set : setCol) {
-				// insert set into UBTree
-				ubTree.insert(new TreeSet<Integer>(set));
-				// perform minimality check
-				ubTree.checkMinimal(testSet);
-			}
-			// end time measuring
-			end = System.nanoTime();
-			// save measurement for current set representation
-			measuredTimes[measuredTimes.length - 1] += end - start;
-		}
-
 		// compute average
 		for (int i = 0; i < measuredTimes.length; i++) {
 			measuredTimes[i] /= repeat;

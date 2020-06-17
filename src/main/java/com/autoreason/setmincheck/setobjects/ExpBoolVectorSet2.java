@@ -1,21 +1,17 @@
 package com.autoreason.setmincheck.setobjects;
 
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.autoreason.setmincheck.MatchProvider;
+import com.autoreason.setmincheck.AbstractSetRepMatchProvider;
 
 /**
  * An {@link ExpSetRepresent} implementation for {@link BoolVectorSet2}
  *
  */
-public class ExpBoolVectorSet2 implements ExpSetRepresent<BoolVectorSet2> {
-
-	@Override
-	public MatchProvider<BoolVectorSet2, Set<?>> getMatchProvider() {
-		return new BoolVecSet2MatchProvider();
-	}
+public class ExpBoolVectorSet2 implements ExpSetRepresent<BoolVectorSet2, BitSet> {
 
 	@Override
 	public Collection<BoolVectorSet2> convertCollection(Collection<Set<Integer>> col) {
@@ -33,6 +29,16 @@ public class ExpBoolVectorSet2 implements ExpSetRepresent<BoolVectorSet2> {
 	@Override
 	public BoolVectorSet2 getSetRepresent(Set<?> set) {
 		return new BoolVectorSet2(set);
+	}
+
+	@Override
+	public void setSetRepLength(int len) {
+		BoolVectorSet2Converter.setRepresentLength = len;
+	}
+
+	@Override
+	public AbstractSetRepMatchProvider<BoolVectorSet2, BitSet> getMatchProvider(Set<?> test) {
+		return new BoolVecSet2MatchProvider(test);
 	}
 
 }

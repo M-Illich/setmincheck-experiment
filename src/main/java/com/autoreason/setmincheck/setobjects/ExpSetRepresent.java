@@ -3,6 +3,7 @@ package com.autoreason.setmincheck.setobjects;
 import java.util.Collection;
 import java.util.Set;
 
+import com.autoreason.setmincheck.AbstractSetRepMatchProvider;
 import com.autoreason.setmincheck.MatchProvider;
 
 /**
@@ -12,18 +13,21 @@ import com.autoreason.setmincheck.MatchProvider;
  *
  * @param <S> An implementation of both {@link SetRepresent} and
  *            {@link Comparable}
- * 
+ * @param <R> The data type for the set representation used by the
+ *            implementation of {@link SetRepresent}
  */
-public interface ExpSetRepresent<S extends SetRepresent<?> & Comparable<S>> {
+public interface ExpSetRepresent<S extends SetRepresent<R> & Comparable<S>, R> {
 
 	/**
 	 * Get a {@link MatchProvider} instance for objects of the {@link SetRepresent}
 	 * type {@code S}
 	 * 
+	 * @param test A {@link Set} for which the matching relation is defined
+	 * 
 	 * @return An object of the {@code MatchProvider} implementation for type
 	 *         {@code S}
 	 */
-	public MatchProvider<S, Set<?>> getMatchProvider();
+	public AbstractSetRepMatchProvider<S, R> getMatchProvider(Set<?> test);
 
 	/**
 	 * Convert the {@link Set} elements of a {@link Collection} into instances of
@@ -44,5 +48,14 @@ public interface ExpSetRepresent<S extends SetRepresent<?> & Comparable<S>> {
 	 * @return An object of type {@code S} that represents {@code set}
 	 */
 	public S getSetRepresent(Set<?> set);
+
+	/**
+	 * Set the value of the {@code convertAttribute} parameter that is used to
+	 * define the bit vector length based on the converted set's size of the related
+	 * {@link AbstractSetConverter} implementations
+	 * 
+	 * @param attr A positive {@code int} value
+	 */
+	public void setSetRepLength(int attr);
 
 }
