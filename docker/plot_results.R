@@ -1,5 +1,6 @@
 # read results
 results <- read.csv("results.csv")
+
 # number of tested set representation objects
 objectNum <- ncol(results) - 1
 

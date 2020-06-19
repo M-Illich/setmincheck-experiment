@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.NavigableSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.liveontologies.puli.collections.BloomTrieCollection2;
 
@@ -28,6 +29,13 @@ public class RunExperiment {
 	@SuppressWarnings("unchecked")
 	public static <E extends ExpSetRepresent<S, R>, S extends SetRepresent<R> & Comparable<S>, R> void main(
 			String[] args) {
+//
+//		try {
+//			TimeUnit.SECONDS.sleep(6);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 		// list of objects realizing different set representations
 		ArrayList<E> setRepList = new ArrayList<E>();
@@ -220,7 +228,7 @@ public class RunExperiment {
 			// check minimality for each UBTree
 			for (UBTree<Integer> tree : ubTreeList) {
 				// perform minimality check
-				tree.checkMinimal((Set<Integer>) dataProvider.testSet);
+				tree.checkMinimal(dataProvider.testSet);
 			}
 			// end time measuring
 			end = System.nanoTime();

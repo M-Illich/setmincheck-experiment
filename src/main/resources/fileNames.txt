@@ -6,7 +6,6 @@ jsSets-go-2938x50x10.txt
 jsSets-go-913x25x10.txt
 rndmCols-1x100000x128.txt
 rndmCols-1x100x50000.txt
-rndmCols-1x300x10000.txt
 rndmCols-2x30000x256.txt
 rndmCols-3x3000x3000.txt
 rndmCols-3x300x10000.txt

@@ -2,11 +2,11 @@ package com.autoreason.setmincheck;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * A tree data structure based on the Unlimited Branching Tree (UBTree) by
@@ -15,44 +15,49 @@ import java.util.TreeSet;
  */
 public class UBTree<C extends Comparable<C>> {
 	// set of all root nodes of the included set trees
-	SortedSet<UBTreeNode<C>> T;
+	ArrayList<UBTreeNode<C>> T;
 
 	// Comparator based on distance to next end-of-path marker
-	Comparator<UBTreeNode<C>> distComparator = Comparator.comparing(n -> n, (a, b) -> {
-		int c = Integer.compare(a.distanceToNextEOP, b.distanceToNextEOP);
-		// use element for equal distances
-		if (c == 0) {
-			c = a.element.compareTo(b.element);
-		}
-		return c;
-	});
+//	Comparator<UBTreeNode<C>> distComparator = Comparator.comparing(n -> n, (a, b) -> {
+//		int c = Integer.compare(a.distanceToNextEOP, b.distanceToNextEOP);
+//		// use element for equal distances
+//		if (c == 0) {
+//			c = a.element.compareTo(b.element);
+//		}
+//		return c;
+//	});
 
 	public UBTree() {
-		T = new TreeSet<UBTreeNode<C>>();
+		T = new ArrayList<UBTreeNode<C>>();
 	}
 
 	/**
 	 * Construct a UBTree that contains the sets of the given collection
 	 * 
-	 * @param col A {@link Collection} of {@link SortedSet} elements
+	 * @param col A {@link Collection} of {@link Set} elements
 	 */
 	public UBTree(Collection<Set<C>> col) {
-		T = new TreeSet<UBTreeNode<C>>();
+		T = new ArrayList<UBTreeNode<C>>();
 		// add sets of collection to tree
 		for (Set<C> set : col) {
 			// insert sorted set to tree
-			insert(new TreeSet<C>(set));
+			insert(set);
 		}
+		// sort nodes
+		Collections.sort(T);
 	}
 
 	/**
-	 * Insert a {@link SortedSet} into the UBTree
+	 * Insert a {@link Set} into the UBTree
 	 * 
-	 * @param set A {@link SortedSet}
+	 * @param set A {@link Set}
 	 */
-	public void insert(SortedSet<C> set) {
+	public void insert(Set<C> set) {
+		ArrayList<C> setList = new ArrayList<>(set);
+		// sort set
+		Collections.sort(setList);
 		// initialize currently regarded tree
-		SortedSet<UBTreeNode<C>> tree = this.T;
+		ArrayList<UBTreeNode<C>> tree = this.T;
 		// currently regarded node
 		UBTreeNode<C> curNode = null;
 		// current element of set
@@ -61,8 +66,8 @@ public class UBTree<C extends Comparable<C>> {
 		boolean found;
 
 		// number of remaining set elements
-		int remain = set.size();
-		Iterator<C> iter = set.iterator();
+		int remain = setList.size();
+		Iterator<C> iter = setList.iterator();
 		// insert each element
 		while (iter.hasNext()) {
 			// get current element
@@ -94,60 +99,99 @@ public class UBTree<C extends Comparable<C>> {
 	}
 
 	/**
-	 * Get all subsets of a given {@link SortedSet} that occur in a given set of
-	 * {@link UBTreeNode} objects
+	 * Get all subsets of a given set that occur in a list of {@link UBTreeNode}
+	 * objects
 	 * 
-	 * @param treeNodes A {@link SortedSet} of {@link UBTreeNode} objects
-	 * @param set       A {@link SortedSet}
+	 * @param treeNodes  A sorted {@link ArrayList} of {@link UBTreeNode} objects
+	 * @param set        A sorted {@link ArrayList}
+	 * @param startIndex An {@code int} stating the index starting from which the
+	 *                   set elements are considered
 	 * @return A {@link Collection} containing all the subsets of {@code set}
 	 *         contained in {@code treeNodes}
 	 */
-	public Collection<SortedSet<C>> lookup_subs(SortedSet<UBTreeNode<C>> treeNodes, SortedSet<C> set) {
+	public Collection<Set<C>> lookup_subs(ArrayList<UBTreeNode<C>> treeNodes, ArrayList<C> set, int startIndex) {
 		// collection for subsets
-		Collection<SortedSet<C>> subsets = new ArrayList<SortedSet<C>>();
+		Collection<Set<C>> subsets = new ArrayList<Set<C>>();
 
-		// find all nodes with a related set element and sort them by distance to next
-		// end-of-path marker
-		Collection<UBTreeNode<C>> matchNodes = new TreeSet<UBTreeNode<C>>(distComparator);
+		int setSize = set.size();
+		int remainSetSize = setSize;
+		// find all nodes with a related set element
 		int c;
-		for (C e : set) {
+		for (int index = startIndex; index < setSize; index++) {
+			C setElem = set.get(index);
+			remainSetSize--;
+
 			for (UBTreeNode<C> node : treeNodes) {
-				// compare element with node element
-				c = e.compareTo(node.element);
+				// compare set element with node element
+				c = setElem.compareTo(node.element);
 				if (c <= 0) {
+					// matching node found
 					if (c == 0) {
-						// matching node found
-						matchNodes.add(node);
+						// only consider node if distance to next end-of-path marker is not greater than
+						// number of remaining elements
+						if (node.distanceToNextEOP <= remainSetSize) {
+							if (node.endOfPath) {
+								// subset found
+								subsets.add(getSet(node));
+							}
+							if (remainSetSize > 0) {
+								// consider children of node with remaining elements
+								subsets.addAll(lookup_subs(node.children, set, index));
+							}
+						}
 					}
-					// stop search if element is not greater than node due to sorted order of tree
-					// nodes
+					// stop search if set element is not greater than node, due to sorted order of
+					// tree nodes
 					break;
 				}
 			}
 		}
 
-		SortedSet<C> remainSet;
-		int remainSetSize;
-		// look for end-of-path marker, thus indicating a subset
-		for (UBTreeNode<C> node : matchNodes) {
-			// determine remaining set
-			remainSet = set.tailSet(node.element);
-			remainSetSize = remainSet.size();
-			// only consider node if distance to next end-of-path marker is not greater than
-			// number of remaining elements
-			if (node.distanceToNextEOP <= remainSetSize) {
-				if (node.endOfPath) {
-					// subset found
-					subsets.add(getSet(node));
-				}
-				if (remainSetSize > 0) {
-					// consider children of node with remaining elements
-					subsets.addAll(lookup_subs(node.children, remainSet));
-				}
-			}
-		}
-
 		return subsets;
+
+//		// find all nodes with a related set element and sort them by distance to next
+//		// end-of-path marker
+//		Collection<UBTreeNode<C>> matchNodes = new ArrayList<UBTreeNode<C>>();	// distComparator
+//		int c;
+//		for (int i = startIndex; i < setSize; i++) {
+//			C e = set.get(i);
+//			for (UBTreeNode<C> node : treeNodes) {
+//				// compare element with node element
+//				c = e.compareTo(node.element);
+//				if (c <= 0) {
+//					if (c == 0) {
+//						// matching node found
+//						matchNodes.add(node);
+//					}
+//					// stop search if element is not greater than node due to sorted order of tree
+//					// nodes
+//					break;
+//				}
+//			}
+//		}
+//
+////		SortedSet<C> remainSet;		
+//		// look for end-of-path marker, thus indicating a subset
+//		for (UBTreeNode<C> node : matchNodes) {
+//			// determine remaining set
+//			// set.tailSet(node.element);
+//			//set.remove(node);
+//			setSize--;
+//			startIndex++;
+//			// only consider node if distance to next end-of-path marker is not greater than
+//			// number of remaining elements
+//			if (node.distanceToNextEOP <= setSize) {
+//				if (node.endOfPath) {
+//					// subset found
+//					subsets.add(getSet(node));
+//				}
+//				if (setSize > 0) {
+//					// consider children of node with remaining elements
+//					subsets.addAll(lookup_subs(node.children, set, startIndex, setSize));
+//				}
+//			}
+//		}
+
 	}
 
 	/**
@@ -163,8 +207,8 @@ public class UBTree<C extends Comparable<C>> {
 	 * @return The original {@link SortedSet} whose last element relates to the
 	 *         given node
 	 */
-	private SortedSet<C> getSet(UBTreeNode<C> node) {
-		SortedSet<C> set = new TreeSet<C>();
+	private HashSet<C> getSet(UBTreeNode<C> node) {
+		HashSet<C> set = new HashSet<C>();
 
 		// here, for minimality check sufficient to return last element, indicating
 		// that a subset exists
@@ -183,46 +227,49 @@ public class UBTree<C extends Comparable<C>> {
 	 *         {@code testSet}, otherwise {@code false}
 	 */
 	public boolean checkMinimal(Set<C> testSet) {
+		// sort set
+		ArrayList<C> set = new ArrayList<C>(testSet);
+		Collections.sort(set);
 		// look for subsets subsets
-		Collection<SortedSet<C>> subsets = lookup_subs(this.T, new TreeSet<C>(testSet));
+		Collection<Set<C>> subsets = lookup_subs(this.T, set, 0);
 
 		// set is only minimal w.r.t. collection if no subsets could be found
 		return subsets.isEmpty();
 
 	}
 
-	/**
-	 * Find all the {@link UBTreeNode} objects in a collection that relate to the
-	 * given element {@code e}
-	 * 
-	 * @param treeNodes A {@link Collection} of {@link UBTreeNode} objects
-	 * @param e         An element of {@link Comparable} type {@code C}
-	 * @return A {@link Collection} of {@link UBTreeNode} elements with
-	 *         {@link UBTreeNode#element} {@code = e}
-	 */
-	protected Collection<UBTreeNode<C>> findNodes(Collection<UBTreeNode<C>> treeNodes, C e) {
-		Collection<UBTreeNode<C>> matchNodes = new ArrayList<UBTreeNode<C>>();
-		Collection<UBTreeNode<C>> nextNodes = new ArrayList<UBTreeNode<C>>();
-
-		for (UBTreeNode<C> node : treeNodes) {
-			// compare element with node element
-			int c = e.compareTo(node.element);
-			// matching node found
-			if (c == 0) {
-				matchNodes.add(node);
-			} else {
-				// element is bigger -> save children of node
-				if (c == 1) {
-					nextNodes.addAll(node.children);
-				}
-			}
-		}
-		// check children nodes for matches (if available)
-		if (!nextNodes.isEmpty()) {
-			matchNodes.addAll(findNodes(nextNodes, e));
-		}
-
-		return matchNodes;
-	}
+//	/**
+//	 * Find all the {@link UBTreeNode} objects in a collection that relate to the
+//	 * given element {@code e}
+//	 * 
+//	 * @param treeNodes A {@link Collection} of {@link UBTreeNode} objects
+//	 * @param e         An element of {@link Comparable} type {@code C}
+//	 * @return A {@link Collection} of {@link UBTreeNode} elements with
+//	 *         {@link UBTreeNode#element} {@code = e}
+//	 */
+//	protected Collection<UBTreeNode<C>> findNodes(Collection<UBTreeNode<C>> treeNodes, C e) {
+//		Collection<UBTreeNode<C>> matchNodes = new ArrayList<UBTreeNode<C>>();
+//		Collection<UBTreeNode<C>> nextNodes = new ArrayList<UBTreeNode<C>>();
+//
+//		for (UBTreeNode<C> node : treeNodes) {
+//			// compare element with node element
+//			int c = e.compareTo(node.element);
+//			// matching node found
+//			if (c == 0) {
+//				matchNodes.add(node);
+//			} else {
+//				// element is bigger -> save children of node
+//				if (c == 1) {
+//					nextNodes.addAll(node.children);
+//				}
+//			}
+//		}
+//		// check children nodes for matches (if available)
+//		if (!nextNodes.isEmpty()) {
+//			matchNodes.addAll(findNodes(nextNodes, e));
+//		}
+//
+//		return matchNodes;
+//	}
 
 }

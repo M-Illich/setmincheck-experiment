@@ -1,13 +1,14 @@
 package com.autoreason.setmincheck;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * A node for an {@link UBTree}
  *
  */
 public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNode<C>> {
+
 	/**
 	 * the element represented by the node
 	 */
@@ -16,7 +17,7 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 	/**
 	 * the children of the node
 	 */
-	SortedSet<UBTreeNode<C>> children;
+	ArrayList<UBTreeNode<C>> children;
 
 	/**
 	 * the End-of-Path marker, where a path refers to a sorted arrangement of a set
@@ -24,20 +25,20 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 	boolean endOfPath;
 
 	/**
-	 * distance to next closest end-Of-Path marked node (serves as heuristic for
-	 * sorting)
+	 * distance to next closest end-Of-Path marked node
 	 */
 	int distanceToNextEOP;
 
 	public UBTreeNode(C e) {
 		this.element = e;
-		this.children = new TreeSet<UBTreeNode<C>>();
+		this.children = new ArrayList<UBTreeNode<C>>();
 		this.endOfPath = false;
 		this.distanceToNextEOP = Integer.MAX_VALUE;
 	}
 
-	public UBTreeNode(C e, TreeSet<UBTreeNode<C>> ch) {
+	public UBTreeNode(C e, ArrayList<UBTreeNode<C>> ch) {
 		this.element = e;
+		Collections.sort(ch);
 		this.children = ch;
 		this.endOfPath = false;
 		this.distanceToNextEOP = Integer.MAX_VALUE;
@@ -45,7 +46,7 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 
 	public UBTreeNode(C e, boolean eop) {
 		this.element = e;
-		this.children = new TreeSet<UBTreeNode<C>>();
+		this.children = new ArrayList<UBTreeNode<C>>();
 		this.endOfPath = eop;
 		if (eop) {
 			this.distanceToNextEOP = 0;
@@ -56,7 +57,7 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 
 	public UBTreeNode(C e, int dist) {
 		this.element = e;
-		this.children = new TreeSet<UBTreeNode<C>>();
+		this.children = new ArrayList<UBTreeNode<C>>();
 		if (dist == 0) {
 			this.endOfPath = true;
 		} else {
@@ -70,12 +71,6 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 		// use element for comparison (since method is used to sort members of an UBTree
 		// where different ones always possess different elements)
 		int c = this.element.compareTo(other.element);
-		// use distance to next end-of-path marker for equal elements
-		// only needed for subset search where it is explicitly applied by the defined
-		// Comparator
-//		if (c == 0) {				
-//			c = Integer.compare(this.distanceToNextEOP, other.distanceToNextEOP);
-//		}
 		return c;
 	}
 
@@ -113,32 +108,5 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 		}
 		return distanceToNextEOP;
 	}
-
-// 			NOT NEEDED ANYMORE
-//	
-//	public UBTreeNode(SortedSet<C> set) {
-//	if(!set.isEmpty()) {
-//		C first = set.first();
-//		this.element = first;
-//		// define children with remaining set
-//		set.remove(first);
-//		TreeSet<UBTreeNode<C>> ch = new TreeSet<UBTreeNode<C>>();
-//		if(!set.isEmpty()) {
-//			ch.add(new UBTreeNode<C>(set));
-//			this.endOfPath = false;
-//		}
-//		else {
-//			// no remaining elements in set
-//			this.endOfPath = true;
-//		}			
-//		this.children = ch;
-//	}		
-//}
-//	
-
-//	@Override
-//	public boolean equals(Object other) {
-//		return this.element.equals(((UBTreeNode<C>) other).element);
-//	}
 
 }
