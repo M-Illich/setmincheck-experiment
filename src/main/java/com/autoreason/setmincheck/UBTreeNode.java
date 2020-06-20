@@ -69,9 +69,8 @@ public class UBTreeNode<C extends Comparable<C>> implements Comparable<UBTreeNod
 	@Override
 	public int compareTo(UBTreeNode<C> other) {
 		// use element for comparison (since method is used to sort members of an UBTree
-		// where different ones always possess different elements)
-		int c = this.element.compareTo(other.element);
-		return c;
+		// where different ones always possess different elements)		
+		return this.element.compareTo(other.element);
 	}
 
 	/**

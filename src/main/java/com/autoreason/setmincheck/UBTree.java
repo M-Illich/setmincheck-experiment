@@ -114,7 +114,7 @@ public class UBTree<C extends Comparable<C>> {
 		Collection<Set<C>> subsets = new ArrayList<Set<C>>();
 
 		int setSize = set.size();
-		int remainSetSize = setSize;
+		int remainSetSize = setSize - startIndex;
 		// find all nodes with a related set element
 		int c;
 		for (int index = startIndex; index < setSize; index++) {
@@ -136,7 +136,7 @@ public class UBTree<C extends Comparable<C>> {
 							}
 							if (remainSetSize > 0) {
 								// consider children of node with remaining elements
-								subsets.addAll(lookup_subs(node.children, set, index));
+								subsets.addAll(lookup_subs(node.children, set, index + 1));
 							}
 						}
 					}
