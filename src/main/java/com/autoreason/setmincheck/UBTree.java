@@ -15,37 +15,6 @@ import java.util.SortedSet;
  */
 public class UBTree<C extends Comparable<C>> {
 
-	public static void main(String[] args) {
-		/*
-		 * jsSets-Galen_DD-45x16x32.txt jsSets-Galen_DD-75x20x50.txt
-		 * jsSets-Galen_DD-combined-1x2141x48.txt jsSets-Galen_DD-notMin-27x100x50.txt
-		 * jsSets-go-2938x50x10.txt jsSets-go-913x25x10.txt rndmCols-1x100000x128.txt
-		 * rndmCols-1x100x50000.txt rndmCols-2x30000x256.txt rndmCols-3x3000x3000.txt
-		 * rndmCols-3x300x10000.txt rndmCols-5x1000x1000.txt
-		 */
-		DataProvider dp = new DataProvider("/files/rndmCols-3x3000x3000.txt");
-		// convert the collections into UBTree objects
-		ArrayList<UBTree<Integer>> ubTreeList = new ArrayList<UBTree<Integer>>();
-		for (Collection<Set<Integer>> col : dp.fileCollections) {
-			ubTreeList.add(new UBTree<Integer>(col));
-		}
-
-		int rep = 5;
-		long sum = 0;
-		for (int i = 0; i < rep; i++) {
-			long start = System.nanoTime();
-			// check minimality for each UBTree
-			for (UBTree<Integer> tree : ubTreeList) {
-				// perform minimality check
-				tree.checkMinimal(dp.testSet);
-			}
-			sum += System.nanoTime() - start;
-			dp.getNewTestSet();
-		}
-		System.out.println(sum / rep);
-
-	}
-
 	// set of all root nodes of the included set trees
 	ArrayList<UBTreeNode<C>> T;
 
@@ -107,17 +76,30 @@ public class UBTree<C extends Comparable<C>> {
 			remain--;
 			// look if element already present
 			found = false;
-			for (UBTreeNode<C> node : tree) {
-				if (node.element.equals(elem)) {
-					curNode = node;
-					// adapt distance to next EOP if necessary
-					if (curNode.distanceToNextEOP > remain) {
-						curNode.distanceToNextEOP = remain;
-					}
-					found = true;
-					break;
+
+			// look for node with set element
+			int i = Collections.binarySearch(tree, new UBTreeNode<C>(elem));
+			if (i > -1) {
+				curNode = tree.get(i);
+				// adapt distance to next EOP if necessary
+				if (curNode.distanceToNextEOP > remain) {
+					curNode.distanceToNextEOP = remain;
 				}
+				found = true;
 			}
+
+//			for (UBTreeNode<C> node : tree) {
+//				if (node.element.equals(elem)) {
+//					curNode = node;
+//					// adapt distance to next EOP if necessary
+//					if (curNode.distanceToNextEOP > remain) {
+//						curNode.distanceToNextEOP = remain;
+//					}
+//					found = true;
+//					break;
+//				}
+//			}
+
 			// introduce new node if element not found
 			if (!found) {
 				curNode = new UBTreeNode<C>(elem, remain);
