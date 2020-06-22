@@ -1,3 +1,5 @@
+academic-1x1001x999.txt
+fiction-1x1000x1000.txt
 jsSets-Galen_DD-45x16x32.txt
 jsSets-Galen_DD-75x20x50.txt
 jsSets-Galen_DD-combined-1x2141x48.txt
