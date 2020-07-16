@@ -14,19 +14,10 @@ import java.util.SortedSet;
  *
  */
 public class UBTree<C extends Comparable<C>> {
-
+	
 	// set of all root nodes of the included set trees
 	ArrayList<UBTreeNode<C>> T;
 
-	// Comparator based on distance to next end-of-path marker
-//	Comparator<UBTreeNode<C>> distComparator = Comparator.comparing(n -> n, (a, b) -> {
-//		int c = Integer.compare(a.distanceToNextEOP, b.distanceToNextEOP);
-//		// use element for equal distances
-//		if (c == 0) {
-//			c = a.element.compareTo(b.element);
-//		}
-//		return c;
-//	});
 
 	public UBTree() {
 		T = new ArrayList<UBTreeNode<C>>();
@@ -88,17 +79,6 @@ public class UBTree<C extends Comparable<C>> {
 				found = true;
 			}
 
-//			for (UBTreeNode<C> node : tree) {
-//				if (node.element.equals(elem)) {
-//					curNode = node;
-//					// adapt distance to next EOP if necessary
-//					if (curNode.distanceToNextEOP > remain) {
-//						curNode.distanceToNextEOP = remain;
-//					}
-//					found = true;
-//					break;
-//				}
-//			}
 
 			// introduce new node if element not found
 			if (!found) {
@@ -152,32 +132,6 @@ public class UBTree<C extends Comparable<C>> {
 				}
 			}
 
-//			for (UBTreeNode<C> node : treeNodes) {
-//				// compare set element with node element
-//				int c = setElem.compareTo(node.element);
-//				if (c <= 0) {
-//					// matching node found
-//					if (c == 0) {
-//						// only consider node if distance to next end-of-path marker is not greater than
-//						// number of remaining elements
-//						if (node.distanceToNextEOP <= remainSetSize) {
-//							if (node.endOfPath) {
-//								// subset found
-//								subsets.add(getSet(node));
-//							}
-//							if (remainSetSize > 0) {
-//								// consider children of node with remaining set elements
-//								subsets.addAll(lookup_subs(node.children, set, index + 1));
-//							}
-//						}
-//
-//					}
-//					// stop search if set element is not greater than node, due to sorted order of
-//					// tree nodes
-//					break;
-//				}
-//			}
-
 		}
 		return subsets;
 	}
@@ -224,39 +178,5 @@ public class UBTree<C extends Comparable<C>> {
 		return subsets.isEmpty();
 
 	}
-
-//	/**
-//	 * Find all the {@link UBTreeNode} objects in a collection that relate to the
-//	 * given element {@code e}
-//	 * 
-//	 * @param treeNodes A {@link Collection} of {@link UBTreeNode} objects
-//	 * @param e         An element of {@link Comparable} type {@code C}
-//	 * @return A {@link Collection} of {@link UBTreeNode} elements with
-//	 *         {@link UBTreeNode#element} {@code = e}
-//	 */
-//	protected Collection<UBTreeNode<C>> findNodes(Collection<UBTreeNode<C>> treeNodes, C e) {
-//		Collection<UBTreeNode<C>> matchNodes = new ArrayList<UBTreeNode<C>>();
-//		Collection<UBTreeNode<C>> nextNodes = new ArrayList<UBTreeNode<C>>();
-//
-//		for (UBTreeNode<C> node : treeNodes) {
-//			// compare element with node element
-//			int c = e.compareTo(node.element);
-//			// matching node found
-//			if (c == 0) {
-//				matchNodes.add(node);
-//			} else {
-//				// element is bigger -> save children of node
-//				if (c == 1) {
-//					nextNodes.addAll(node.children);
-//				}
-//			}
-//		}
-//		// check children nodes for matches (if available)
-//		if (!nextNodes.isEmpty()) {
-//			matchNodes.addAll(findNodes(nextNodes, e));
-//		}
-//
-//		return matchNodes;
-//	}
 
 }

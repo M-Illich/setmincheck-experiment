@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.NavigableSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 import org.liveontologies.puli.collections.BloomTrieCollection2;
 
@@ -29,13 +28,6 @@ public class RunExperiment {
 	@SuppressWarnings("unchecked")
 	public static <E extends ExpSetRepresent<S, R>, S extends SetRepresent<R> & Comparable<S>, R> void main(
 			String[] args) {
-//
-//		try {
-//			TimeUnit.SECONDS.sleep(6);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 
 		// list of objects realizing different set representations
 		ArrayList<E> setRepList = new ArrayList<E>();
