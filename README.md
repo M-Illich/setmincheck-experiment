@@ -37,4 +37,20 @@ One possibility of performing the experiment is to directly execute this jar, le
     docker run --mount type=bind,source=/absolute/path/on/host,target=/home/setmincheck-experiment/plots exp
     ```
     where the `/absolute/path/on/host` must be an accessible path on the host machine and will contain pdf files with the plot for the results of each conducted test case. The plots are created after the experiment is finished, whose progress is displayed in the standard output.
+    
+
+-------------------------------------------------------------------------
+Copyright 2020 Moritz Illich
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 	
